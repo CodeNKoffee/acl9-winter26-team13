@@ -9,7 +9,7 @@ if (next.protocol !== 'https:' || next.pathname !== '/' || next.search || next.h
 const config = JSON.parse(await readFile(path.join(root,'site.config.json')));
 const old = config.url;
 config.url = next.origin;
-const files = ['index.html','robots.txt','sitemap.xml','llms.txt','README.md','CONTRIBUTING.md','.github/ISSUE_TEMPLATE/config.yml','docs/wiki/_Footer.md','docs/wiki/Home.md','docs/wiki/Self-Hosting.md'];
+const files = ['index.html','robots.txt','sitemap.xml','llms.txt','../README.md','../.github/CONTRIBUTING.md','../.github/ISSUE_TEMPLATE/config.yml','docs/DEVELOPMENT.md','docs/wiki/_Footer.md','docs/wiki/Home.md','docs/wiki/Self-Hosting.md'];
 for (const file of files) {
   const target = path.join(root,file);
   await writeFile(target,(await readFile(target,'utf8')).replaceAll(old,next.origin));
@@ -20,6 +20,6 @@ const html = await readFile(path.join(root,'index.html'),'utf8');
 const jsonld = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1];
 const { createHash } = await import('node:crypto');
 const hash = createHash('sha256').update(jsonld).digest('base64');
-const vercelPath = path.join(root,'vercel.json');
+const vercelPath = path.join(root,'../vercel.json');
 await writeFile(vercelPath,(await readFile(vercelPath,'utf8')).replace(/sha256-[A-Za-z0-9+/=]+/,`sha256-${hash}`));
 console.log(`Site URL updated to ${next.origin}. Run npm run check && npm run build.`);

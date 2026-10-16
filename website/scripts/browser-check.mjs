@@ -14,7 +14,7 @@ try {
   page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
   await page.setViewportSize({width:1440,height:1000});
   // Match production headers to catch CSP problems before deployment.
-  const config=JSON.parse(await readFile(new URL('../vercel.json',import.meta.url)));
+  const config=JSON.parse(await readFile(new URL('../../vercel.json',import.meta.url)));
   const headers=Object.fromEntries(config.headers[0].headers.map(h=>[h.key,h.value]));
   await page.route(server.url+'/**',async route=>{
     const response=await route.fetch();

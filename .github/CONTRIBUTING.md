@@ -4,14 +4,14 @@
 |---|---|
 | Website (planned) | [acl9-winter26-apex.hatemsoliman.dev](https://acl9-winter26-apex.hatemsoliman.dev), pending owner deployment |
 | Repository | [github.com/CodeNKoffee/acl9-winter26-apex](https://github.com/CodeNKoffee/acl9-winter26-apex) |
-| User guide | [Guide source](docs/wiki/Home.md) · [Wiki](https://github.com/CodeNKoffee/acl9-winter26-apex/wiki) |
+| User guide | [Guide source](../website/docs/wiki/Home.md) · [Wiki](https://github.com/CodeNKoffee/acl9-winter26-apex/wiki) |
 | Report a bug | [New bug report](https://github.com/CodeNKoffee/acl9-winter26-apex/issues/new?template=bug_report.md) |
 | Suggest a feature | [New feature request](https://github.com/CodeNKoffee/acl9-winter26-apex/issues/new?template=feature_request.md) |
 | Open issues | [Issues](https://github.com/CodeNKoffee/acl9-winter26-apex/issues) · [good first issues](https://github.com/CodeNKoffee/acl9-winter26-apex/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) |
 | Pull requests | [Pull requests](https://github.com/CodeNKoffee/acl9-winter26-apex/pulls) |
 | Security problem | [Report privately](https://github.com/CodeNKoffee/acl9-winter26-apex/security/advisories/new), never in a public issue |
-| What changed | [CHANGELOG.md](CHANGELOG.md) · [Releases](https://github.com/CodeNKoffee/acl9-winter26-apex/releases) |
-| Licence | [MIT](LICENSE) · [Scope](LICENSE-SCOPE.md) |
+| What changed | [CHANGELOG.md](../website/docs/CHANGELOG.md) · [Releases](https://github.com/CodeNKoffee/acl9-winter26-apex/releases) |
+| Licence | [MIT](../LICENSE) · [Scope](../website/docs/LICENSE-SCOPE.md) |
 | Maintainer | [Hatem Soliman](https://hatemsoliman.dev) |
 
 ## Ground rules
@@ -27,6 +27,7 @@ Improve accessible navigation, responsive layout, documentation accuracy, motion
 [Fork the repository](https://github.com/CodeNKoffee/acl9-winter26-apex/fork), clone your fork, and use Node.js 22 or newer:
 
 ```sh
+cd website
 npm ci
 npm run dev
 ```
@@ -53,8 +54,8 @@ npm run build
 
 Use semantic HTML, reusable CSS, and small ES modules. Avoid framework dependencies for this static page. Put archive links in `assets/config.js`; keep no-JS HTML fallbacks synchronized. No inline event handlers. Use `npm run set-url -- https://your-domain.example` for canonical/domain changes, then regenerate and verify media when needed.
 
-Edit the user guide in `docs/wiki/`. The reviewed source is authoritative; web-only wiki edits are overwritten by synchronization.
+Edit the user guide in `website/docs/wiki/`. The reviewed source is authoritative; web-only wiki edits are overwritten by synchronization.
 
 ## Versions and tags
 
-Use semantic versioning. Contributors add changes under **Unreleased**. Maintainers create a matching release section, bump `package.json`, `package-lock.json`, `site.config.json`, and `assets/config.js`, commit, create one annotated tag such as `v1.0.0`, and publish a matching GitHub release. Push annotated tags with `git push --follow-tags`.
+Use semantic versioning. Contributors add changes under **Unreleased**. Maintainers create a matching release section, bump `website/package.json`, `website/package-lock.json`, `website/site.config.json`, and `website/assets/config.js`, commit, create one annotated tag such as `v1.0.0`, and publish a matching GitHub release. Push annotated tags with `git push --follow-tags`.

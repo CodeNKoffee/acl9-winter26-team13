@@ -6,7 +6,16 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 ### Added
 
-- Versioned user guide in `docs/wiki/` and a script for publishing it to GitHub Wiki.
+- Versioned user guide in `website/docs/wiki/` and a script for publishing it to GitHub Wiki.
+
+## [1.1.0] - 2026-10-17
+
+### Changed
+
+- Grouped website source, tooling, and detailed docs under `website/` so the unchanged root ZIP is easy to find.
+- Moved community guides into `.github/` while retaining their GitHub integration.
+- Rewrote the root README around a prominent direct ZIP download and one crisp static preview.
+- Updated Vercel configuration, CI, commands, and links for the new layout.
 
 ## [1.0.2] - 2026-10-17
 
@@ -42,7 +51,8 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 The pre-existing `F1 Project Repository.zip` remains unchanged by this release. The website's version number describes the showcase, not the archived model or coursework.
 
-[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/CodeNKoffee/acl9-winter26-apex/releases/tag/v1.0.0

@@ -49,6 +49,6 @@ try {
   if(optimizer.error?.code==='ENOENT')console.log('gifsicle unavailable; using the compact ffmpeg output.');
   const bytes=(await stat(gif)).size;
   if(bytes>1048576)throw new Error(`GIF exceeds 1 MiB (${bytes} bytes). Lower palette size or frame count.`);
-  await writeFile(path.join(media,'media-info.json'),JSON.stringify({source:'Real app captures from scripts/readme-media.mjs',gifBytes:bytes},null,2)+'\n');
+  await writeFile(path.join(media,'media-info.json'),JSON.stringify({source:'Real app captures from website/scripts/readme-media.mjs',gifBytes:bytes},null,2)+'\n');
   console.log(`Captured website media; intro GIF ${(bytes/1024).toFixed(0)} KiB.`);
 } finally { await browser?.close();server.stop();await rm(frames,{recursive:true,force:true}); }

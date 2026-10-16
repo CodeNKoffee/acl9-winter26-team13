@@ -2,7 +2,7 @@
 
 ## Validation
 
-- [ ] `npm run check`, `npm test`, and `npm run build` pass.
+- [ ] `npm run check`, `npm test`, and `npm run build` pass from `website/`.
 - [ ] Relevant desktop, mobile, keyboard, and reduced-motion behavior checked.
 - [ ] Archive links and no-JavaScript fallback still work.
 - [ ] No personal data, trackers, secrets, or unsupported research claims added.

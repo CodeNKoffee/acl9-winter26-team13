@@ -1,10 +1,9 @@
 .git
 .github
-docs
-scripts
-node_modules
+website/docs
+website/node_modules
+website/dist
 *.zip
 *.md
 LICENSE
-test-results
 tmp
