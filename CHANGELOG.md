@@ -8,6 +8,14 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 - Versioned user guide in `docs/wiki/` and a script for publishing it to GitHub Wiki.
 
+## [1.0.1] - 2026-10-17
+
+### Changed
+
+- Replaced the Apex navigation and footer wordmarks with the official white F1 SVG.
+- Updated the crew section to the four verified Team 13 members, retaining illustrative driver silhouettes.
+- Adjusted the crew grid for desktop, tablet, and phone widths and refreshed documentation and real app media.
+
 ## [1.0.0] - 2026-10-17
 
 ### Added
@@ -26,5 +34,6 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 The pre-existing `F1 Project Repository.zip` remains unchanged by this release. The website's version number describes the showcase, not the archived model or coursework.
 
-[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/CodeNKoffee/acl9-winter26-apex/releases/tag/v1.0.0

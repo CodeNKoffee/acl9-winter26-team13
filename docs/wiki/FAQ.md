@@ -10,7 +10,7 @@ Google controls supported previews and file sharing. A ZIP may not preview. Choo
 
 **Who are the drivers?**
 
-The silhouettes are anonymous illustrations for data engineering, machine learning, and explainability. They do not identify people or establish a team headcount.
+The four cards introduce Team 13: Youssef Sherif, Hatem Soliman, Mohammed Elazab, and Tony Henin. Names were matched to the supplied CSEN903 Winter 2026 team roster. The helmeted figures are illustrative silhouettes; no teammate photos or student IDs are published.
 
 **Can I skip the intro?**
 

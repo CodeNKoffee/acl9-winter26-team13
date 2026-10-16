@@ -9,6 +9,6 @@ The page has four main stops: the hero, **The project**, **The crew**, and **The
 
 On phones, **Open navigation** expands the section links. Choosing a link closes the menu; Escape closes it too. **Replay intro** in the footer replays the animation, unless reduced motion is enabled.
 
-The silhouettes represent three work disciplines; they are not a roster or a claim about the number of team members.
+The crew section lists the four members of Team 13: Youssef Sherif, Hatem Soliman, Mohammed Elazab, and Tony Henin. Each card includes the full roster name. The helmeted silhouettes are illustrations, not photographs.
 
 Continue with [[Project Archive]].

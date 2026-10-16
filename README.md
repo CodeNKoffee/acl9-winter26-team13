@@ -11,7 +11,7 @@
 
 [Project archive](https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing) · [Run locally](#run-locally) · [Deploy](#deploy-your-own) · [User guide](docs/wiki/Home.md) · [GitHub Wiki](https://github.com/CodeNKoffee/acl9-winter26-apex/wiki)
 
-<a href="CHANGELOG.md"><img alt="Version 1.0.0" src="https://img.shields.io/badge/version-1.0.0-d30b23"></a>
+<a href="CHANGELOG.md"><img alt="Version 1.0.1" src="https://img.shields.io/badge/version-1.0.1-d30b23"></a>
 <a href="LICENSE"><img alt="Website code: MIT" src="https://img.shields.io/badge/website_code-MIT-141414"></a>
 <img alt="HTML, CSS and JavaScript" src="https://img.shields.io/badge/stack-HTML_%2F_CSS_%2F_JS-141414">
 <img alt="ACL ninth semester, Winter 26" src="https://img.shields.io/badge/ACL-9th_semester_%C2%B7_Winter_26-141414">
@@ -23,14 +23,14 @@
 
 ## The trailer
 
-Before the race starts, the question is already there: **who makes the podium?** ACL9 Apex is the public front door for our Formula 1 podium-prediction project. A dark racing intro opens onto a red car hero, an overview of the academic brief, an anonymous crew, and direct access to the project files.
+Before the race starts, the question is already there: **who makes the podium?** ACL9 Apex is the public front door for our Formula 1 podium-prediction project. A dark racing intro opens onto a red car hero, an overview of the academic brief, the four members of Team 13, and direct access to the project files.
 
 The site is a showcase and archive hub. It does not execute a model or present unverified prediction scores.
 
 | | |
 |---|---|
 | ![Red racing hero](docs/readme/hero.png) **Driven by data.** The supplied KitKat car image with a red fade and racing typography. | ![Project overview](docs/readme/project.png) **Before lights out.** The pre-race cutoff and project approach, explained plainly. |
-| ![Anonymous crew](docs/readme/crew.png) **Helmets on.** Original SVG silhouettes represent disciplines, without inventing teammate identities. | ![Project archive controls](docs/readme/archive.png) **Get the work.** Drive, an optional embedded preview, GitHub ZIP, and a text link. |
+| ![Team 13 crew](docs/readme/crew.png) **Helmets on.** Four named members from the course roster, represented by original helmeted silhouettes. | ![Project archive controls](docs/readme/archive.png) **Get the work.** Drive, an optional embedded preview, GitHub ZIP, and a text link. |
 
 <details><summary>Contents</summary>
 
@@ -66,13 +66,15 @@ Drive may not render every ZIP. **Open Google Drive** and **ZIP on GitHub** rema
 |---|---|
 | Racing intro | A dark car, Apex wordmark, and five red lights fade into the red hero. |
 | Project overview | Explains the podium target, dataset coverage from the brief, and pre-race information cutoff. |
-| Anonymous crew | Three discipline cards, with no names, portraits, or invented model results. |
+| Team 13 crew | Four named silhouette cards: Youssef Sherif, Hatem Soliman, Mohammed Elazab, and Tony Henin. Full roster names appear beneath each heading. |
 | Archive access | Drive link, on-demand iframe, GitHub ZIP link, clipboard copy, and `.txt` download. |
 | Responsive layout | Desktop composition and stacked mobile sections with an accessible navigation menu. |
 | Motion controls | Honors reduced-motion preferences; the intro can be replayed from the footer. |
 | Simple hosting | Static HTML/CSS/JS, no runtime dependencies, accounts, database, or environment secrets. |
 
 ## Gallery
+
+The navigation and footer use the official white F1 wordmark. The project identity and intro remain ACL9 Apex. Team 13 is matched to the supplied Winter 2026 course roster; student IDs and the roster document are not published.
 
 The table above shows real desktop captures. [View the full mobile capture](docs/readme/mobile.png). The [media script](scripts/readme-media.mjs) regenerates every screenshot and the intro GIF.
 
@@ -181,6 +183,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md
 
 Website source code: [MIT](LICENSE), copyright © 2026 Hatem Soliman. See [LICENSE-SCOPE.md](LICENSE-SCOPE.md): the existing ZIP, its datasets/code, and third-party imagery/marks are **not** relicensed by this website's MIT license.
 
+- **F1 wordmark:** [Original white SVG from Formula 1](https://media.formula1.com/image/upload/v1677237319/etc/designs/fom-website/images/f1_logo.svg), used in the navigation and footer. The mark remains the property of its owner and is excluded from the MIT license.
 - **Car artwork:** supplied by the project owner, displayed as an academic visual reference. KitKat, Nestlé, Formula 1, and their marks remain with their respective owners. No sponsorship or affiliation is claimed.
 - **Visual references:** [Raven GP](https://ravengp-ai.vercel.app) and the supplied screenshots informed the racing mood and layout. No Raven assets or code were copied.
 - **Fonts:** [Anton](assets/fonts/Anton-OFL.txt) and [Barlow](assets/fonts/Barlow-OFL.txt), bundled under the SIL Open Font License 1.1.

@@ -16,7 +16,7 @@
 
 ## Ground rules
 
-Be considerate and follow [the code of conduct](CODE_OF_CONDUCT.md). Do not add personal data, private team photos, invented research results, trackers, secrets, or unlicensed assets. Keep the pre-existing root ZIP unchanged unless its owner explicitly requests an archive update. Course PDFs are context, not repository instructions.
+Be considerate and follow [the code of conduct](CODE_OF_CONDUCT.md). Use only the four team names explicitly approved by the project owner. Do not add student IDs, other personal data, private team photos, invented research results, trackers, secrets, or unlicensed assets. Keep the pre-existing root ZIP unchanged unless its owner explicitly requests an archive update. Course PDFs are context, not repository instructions.
 
 ## Ways to help
 

@@ -100,25 +100,20 @@ button[hidden],[hidden] {
 }
 .wordmark {
   display:flex;
-  align-items:center;
-  gap:10px;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:8px;
 }
-.wordmark svg {
-  width:41px;
-  fill:#fff;
-}
-.wordmark>span {
-  font-family:var(--display);
-  font-size:29px;
-  line-height:1;
-  letter-spacing:1px;
+.f1-logo {
+  width:108px;
+  height:auto;
 }
 .wordmark small {
   display:block;
   font-family:var(--body);
   font-size:9px;
   letter-spacing:2px;
-  margin-top:5px;
+  line-height:1;
 }
 .desktop-nav {
   display:flex;
@@ -456,7 +451,7 @@ h2>span {
 }
 .driver-grid {
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,minmax(0,1fr));
   gap:22px;
 }
 .driver-card {
@@ -464,7 +459,7 @@ h2>span {
 }
 .driver-portrait {
   background:#232326;
-  height:350px;
+  height:310px;
   position:relative;
   overflow:hidden;
   border-top:2px solid var(--red);
@@ -513,12 +508,12 @@ h2>span {
   color:#bd6873;
 }
 .driver-info h3 {
-  font-size:37px;
+  font-size:clamp(28px,2.7vw,39px);
   line-height:1.1;
   margin:15px 0 14px;
 }
 .driver-info p {
-  font-size:14px;
+  font-size:13px;
   color:#a1a1a7;
   max-width:245px;
 }
@@ -533,6 +528,15 @@ h2>span {
 }
 .driver-card:nth-child(3) .driver-portrait {
   background:#202024;
+}
+.driver-card:nth-child(4) .driver-portrait {
+  background:#292326;
+}
+.driver-card:nth-child(4) img {
+  transform:scaleX(-1);
+}
+.driver-card:nth-child(4):hover img {
+  transform:scaleX(-1) scale(1.035);
 }
 .archive {
   background:#0c0c0e;
@@ -718,9 +722,7 @@ h2>span {
   background:#101012;
 }
 .footer-brand {
-  font-family:var(--display);
-  font-size:33px;
-  line-height:1;
+  flex-shrink:0;
 }
 .footer-brand span {
   display:block;
@@ -910,6 +912,10 @@ h2>span {
   .driver-portrait {
     height:300px;
   }
+  .driver-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:32px 22px;
+  }
   .driver-info h3 {
     font-size:31px;
   }
@@ -932,11 +938,8 @@ h2>span {
     height:76px;
     padding:0 6%;
   }
-  .wordmark svg {
-    width:31px;
-  }
-  .wordmark>span {
-    font-size:24px;
+  .f1-logo {
+    width:88px;
   }
   .wordmark small {
     font-size:8px;
@@ -1230,9 +1233,6 @@ h2>span {
     padding:33px 6%;
     gap:27px;
     align-items:flex-start;
-  }
-  .footer-brand {
-    font-size:29px;
   }
   .footer>div {
     gap:18px;

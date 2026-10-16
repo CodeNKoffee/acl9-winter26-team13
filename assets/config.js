@@ -1,6 +1,6 @@
 export const project = Object.freeze({
   name: 'ACL9 Apex',
-  version: '1.0.0',
+  version: '1.0.1',
   drive: 'https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing',
   preview: 'https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/preview',
   repo: 'https://github.com/CodeNKoffee/acl9-winter26-apex',

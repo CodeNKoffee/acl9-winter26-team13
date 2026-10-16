@@ -5,6 +5,7 @@ The root MIT license applies to the newly authored website code, scripts, origin
 It does not grant rights to:
 
 - `F1 Project Repository.zip` or its contents. This pre-existing owner-managed archive was preserved unchanged. Consult the archive's own notices and underlying data licenses.
+- `assets/f1-logo.svg`, the official Formula 1 white wordmark sourced from the Formula 1 website.
 - `assets/kitkat-racing.jpeg`, supplied by the project owner, or the F1, KitKat, and Nestlé marks visible in it.
 - The branded imagery visible in screenshots, GIFs, and `og.png`; capture does not change the underlying ownership.
 - Bundled font software, which uses its respective SIL Open Font License notices in `assets/fonts/`.
