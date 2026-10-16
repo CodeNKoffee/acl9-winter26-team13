@@ -20,6 +20,6 @@ const html = await readFile(path.join(root,'index.html'),'utf8');
 const jsonld = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1];
 const { createHash } = await import('node:crypto');
 const hash = createHash('sha256').update(jsonld).digest('base64');
-const vercelPath = path.join(root,'../vercel.json');
+const vercelPath = path.join(root,'vercel.json');
 await writeFile(vercelPath,(await readFile(vercelPath,'utf8')).replace(/sha256-[A-Za-z0-9+/=]+/,`sha256-${hash}`));
 console.log(`Site URL updated to ${next.origin}. Run npm run check && npm run build.`);

@@ -1,6 +1,6 @@
 {
   "name": "acl9-winter26-team13",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "description": "ACL ninth-semester Winter 26 Formula 1 podium-prediction project showcase",
   "type": "module",

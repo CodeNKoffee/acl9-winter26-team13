@@ -8,6 +8,19 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 - Versioned user guide in `website/docs/wiki/` and a script for publishing it to GitHub Wiki.
 
+## [1.2.1] - 2026-10-17
+
+### Fixed
+
+- Moved the Vercel configuration into `website/` and corrected install, build, and output paths for that Root Directory.
+- Updated the URL helper and browser checks to use the website-local security headers.
+- Documented the exact Vercel settings and how to clear the older command override.
+
+### Changed
+
+- Added prominent website and direct Google Drive buttons to the README header.
+- Set the repository About link to the project archive on Google Drive.
+
 ## [1.2.0] - 2026-10-17
 
 ### Changed
@@ -65,7 +78,8 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 The pre-existing `F1 Project Repository.zip` remains unchanged by this release. The website's version number describes the showcase, not the archived model or coursework.
 
-[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.0.2...v1.1.0

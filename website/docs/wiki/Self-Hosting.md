@@ -6,7 +6,20 @@ Run `npm run check`, `npx playwright install chromium`, `npm test`, and `npm run
 
 ## Vercel
 
-Import `CodeNKoffee/acl9-winter26-team13`. Choose framework **Other** and leave the Vercel project root at the repository root. The root `vercel.json` sets install command `npm --prefix website ci`, build command `npm --prefix website run build`, and output directory `website/dist`. It also supplies the security headers. No environment variables are required.
+Import `CodeNKoffee/acl9-winter26-team13` with these settings:
+
+| Setting | Value |
+|---|---|
+| Root Directory | `website` |
+| Framework Preset | Other |
+| Install Command | `npm ci` |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
+| Environment Variables | None |
+
+`website/vercel.json` supplies the commands, output directory, and security headers. Leave dashboard command overrides off, or use exactly the values above. Save the root setting and deploy the latest `main` commit.
+
+If a build log still shows `npm --prefix website ci`, it is using an older configuration. With Root Directory set to `website`, that command looks for a second `website/` folder and fails to find the lockfile. Clear the old override and create a deployment from the latest commit instead of redeploying the failed old commit.
 
 The metadata currently uses the planned domain https://acl9-winter26-team13.hatemsoliman.dev. Set your actual domain before publication:
 
