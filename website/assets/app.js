@@ -30,31 +30,33 @@ document.querySelectorAll('.reveal').forEach(element => observer.observe(element
 
 const menuToggle = document.querySelector('#menu-toggle');
 const mobileNav = document.querySelector('#mobile-nav');
+function setDisclosure(toggle, panel, expanded) {
+  toggle.setAttribute('aria-expanded', String(expanded));
+  panel.classList.toggle('is-collapsed', !expanded);
+  panel.inert = !expanded;
+}
+setDisclosure(menuToggle, mobileNav, false);
+mobileNav.hidden = false;
 function closeMenu() {
-  menuToggle.setAttribute('aria-expanded', 'false');
+  setDisclosure(menuToggle, mobileNav, false);
   menuToggle.setAttribute('aria-label', 'Open navigation');
-  mobileNav.hidden = true;
 }
 menuToggle.addEventListener('click', () => {
   const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
-  mobileNav.hidden = expanded;
-  menuToggle.setAttribute('aria-expanded', String(!expanded));
+  setDisclosure(menuToggle, mobileNav, !expanded);
   menuToggle.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
 });
 mobileNav.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && !mobileNav.hidden) { closeMenu(); menuToggle.focus(); }
+  if (event.key === 'Escape' && menuToggle.getAttribute('aria-expanded') === 'true') { closeMenu(); menuToggle.focus(); }
 });
 matchMedia('(min-width: 761px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
 
 const previewToggle = document.querySelector('#preview-toggle');
 const preview = document.querySelector('#drive-preview');
-const previewFrame = preview.querySelector('iframe');
 previewToggle.addEventListener('click', () => {
   const expanded = previewToggle.getAttribute('aria-expanded') === 'true';
-  if (!expanded && !previewFrame.hasAttribute('src')) previewFrame.src = project.preview;
-  preview.hidden = expanded;
-  previewToggle.setAttribute('aria-expanded', String(!expanded));
+  setDisclosure(previewToggle, preview, !expanded);
   previewToggle.innerHTML = expanded ? 'Preview archive <span>+</span>' : 'Close preview <span>−</span>';
 });
 

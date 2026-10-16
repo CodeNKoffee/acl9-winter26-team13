@@ -40,7 +40,7 @@ Our project explores who finishes on the podium using information available afte
   <a href="https://acl9-winter26-team13.hatemsoliman.dev"><img src="website/docs/readme/hero.png" alt="Visit the Team 13 website: white F1 logo, red racing car, and Driven by Data headline" width="100%"></a>
 </p>
 
-The website introduces the project and team, with direct archive links and a Google Drive preview. It does not run the prediction model in the browser.
+The website introduces the project and team, with direct archive links and a Google Drive preview that starts expanded. It does not run the prediction model in the browser.
 
 [View the crew](website/docs/readme/crew.png) · [View the archive section](website/docs/readme/archive.png) · [Browse website source](website/)
 

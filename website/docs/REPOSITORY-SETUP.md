@@ -6,7 +6,7 @@
 - Topics: `formula-1`, `podium-prediction`, `machine-learning`, `data-engineering`, `academic-project`, `winter-2026`, `html`, `css`, `javascript`, `vercel`
 - About link: `https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing`, for direct access to the project archive.
 - Showcase: `https://acl9-winter26-team13.hatemsoliman.dev`, linked prominently from the README. Deployment and domain connection are managed in Vercel by the owner.
-- Release tag: `v1.2.1`, describing the website release.
+- Release tag: `v1.2.2`, describing the website release.
 - Social preview file: `website/og.png`. GitHub's custom repository social preview must be set in the repository settings by a signed-in maintainer; the website's Open Graph preview is already configured.
 
 The repository already contained its ZIP. This release leaves its content unchanged. Vercel deployment, DNS, and archive updates remain with the owner.

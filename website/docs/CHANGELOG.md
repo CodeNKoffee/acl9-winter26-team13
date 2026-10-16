@@ -8,6 +8,15 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 - Versioned user guide in `website/docs/wiki/` and a script for publishing it to GitHub Wiki.
 
+## [1.2.2] - 2026-10-17
+
+### Changed
+
+- Opened the archive preview by default, including without JavaScript, while retaining native iframe lazy loading.
+- Added reversible height and fade transitions for the preview and mobile navigation, with immediate changes for reduced motion.
+- Kept collapsed content out of keyboard navigation and preserved the loaded iframe when reopening.
+- Updated the guide, browser checks, and archive captures for the new default.
+
 ## [1.2.1] - 2026-10-17
 
 ### Fixed
@@ -78,7 +87,8 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 The pre-existing `F1 Project Repository.zip` remains unchanged by this release. The website's version number describes the showcase, not the archived model or coursework.
 
-[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.1.0...v1.1.1

@@ -11,7 +11,7 @@
 
 [Project archive](https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing) · [Run locally](#run-locally) · [Deploy](#deploy-your-own) · [User guide](wiki/Home.md) · [GitHub Wiki](https://github.com/CodeNKoffee/acl9-winter26-team13/wiki)
 
-<a href="CHANGELOG.md"><img alt="Version 1.2.1" src="https://img.shields.io/badge/version-1.2.1-d30b23"></a>
+<a href="CHANGELOG.md"><img alt="Version 1.2.2" src="https://img.shields.io/badge/version-1.2.2-d30b23"></a>
 <a href="../../LICENSE"><img alt="Website code: MIT" src="https://img.shields.io/badge/website_code-MIT-141414"></a>
 <img alt="HTML, CSS and JavaScript" src="https://img.shields.io/badge/stack-HTML_%2F_CSS_%2F_JS-141414">
 <img alt="ACL ninth semester, Winter 26" src="https://img.shields.io/badge/ACL-9th_semester_%C2%B7_Winter_26-141414">
@@ -31,7 +31,7 @@ The site is a showcase and archive hub. It does not execute a model or present u
 | | |
 |---|---|
 | ![Red racing hero](readme/hero.png) **Driven by data.** The supplied KitKat car image with a red fade and racing typography. | ![Project overview](readme/project.png) **Before lights out.** The pre-race cutoff and project approach, explained plainly. |
-| ![Team 13 crew](readme/crew.png) **Helmets on.** Four named members from the course roster, represented by original helmeted silhouettes. | ![Project archive controls](readme/archive.png) **Get the work.** Drive, an optional embedded preview, GitHub ZIP, and a text link. |
+| ![Team 13 crew](readme/crew.png) **Helmets on.** Four named members from the course roster, represented by original helmeted silhouettes. | ![Project archive controls](readme/archive.png) **Get the work.** Drive, an expanded embedded preview, GitHub ZIP, and a text link. |
 
 <details><summary>Contents</summary>
 
@@ -57,7 +57,7 @@ The site is a showcase and archive hub. It does not execute a model or present u
 
 - [F1 Project Repository.zip](../../F1%20Project%20Repository.zip) is already in the repository root. The website setup preserves it unchanged. Archive updates remain with the project owner.
 - [project-link.txt](../project-link.txt) contains the normal shared Drive link, the preview URL, and the repository URL.
-- The website embeds `https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/preview` after **Preview archive** is selected.
+- The website embeds `https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/preview` in a preview that starts expanded. The browser lazy-loads the iframe near the archive section; **Close preview** and **Preview archive** smoothly collapse and reopen it.
 
 Drive may not render every ZIP. **Open Google Drive** and **ZIP on GitHub** remain available. Drive sharing settings are controlled by the file owner.
 
@@ -68,7 +68,7 @@ Drive may not render every ZIP. **Open Google Drive** and **ZIP on GitHub** rema
 | Racing intro | A dark car, Team 13 wordmark, and five red lights fade into the red hero. |
 | Project overview | Explains the podium target, dataset coverage from the brief, and pre-race information cutoff. |
 | Team 13 crew | Four named silhouette cards: Youssef Hesham, Hatem Soliman, Mohammed Elazab, and Tony Makaryous. Their original student IDs appear beneath each heading. |
-| Archive access | Drive link, on-demand iframe, GitHub ZIP link, clipboard copy, and `.txt` download. |
+| Archive access | Drive link, default-open lazy iframe, GitHub ZIP link, clipboard copy, and `.txt` download. |
 | Responsive layout | Desktop composition and stacked mobile sections with an accessible navigation menu. |
 | Motion controls | Honors reduced-motion preferences; the intro can be replayed from the footer. |
 | Simple hosting | Static HTML/CSS/JS, no runtime dependencies, accounts, database, or environment secrets. |
@@ -84,7 +84,7 @@ The table above shows real desktop captures. [View the full mobile capture](read
 1. The page serves complete HTML; core copy and archive links work without JavaScript.
 2. CSS crops and blends the supplied image into the hero. The original image file is copied without editing.
 3. JavaScript handles the intro, mobile menu, section reveals, preview toggle, and copy action.
-4. The Google Drive iframe loads only when the visitor opens the preview.
+4. The Google Drive preview starts expanded and uses native iframe lazy loading. Its expand/collapse transition and the mobile menu use CSS grid and opacity, with collapsed content removed from keyboard navigation.
 5. The build copies an explicit list of website assets into `dist/`. The root ZIP stays in GitHub and is excluded from website deployment.
 
 The website describes the supplied course brief: one driver per race, top-three target, and only information available after qualifying and before race start. It does not certify that the archived implementation meets the brief. This setup does not extract, audit, or modify the ZIP.
@@ -93,7 +93,7 @@ The website describes the supplied course brief: one driver per race, top-three 
 
 No analytics, advertising scripts, cookies, local storage, login, or database are added. Intro state does not persist across visits. The copy action writes the public Drive link to your clipboard when requested.
 
-Opening Drive or GitHub sends you to that service. Expanding the Drive preview loads a Google-hosted iframe, subject to Google's own behavior and policies. The website cannot change the archive or its sharing permissions. See [Your data](wiki/Your-Data.md).
+Opening Drive or GitHub sends you to that service. The default-open preview can load a Google-hosted iframe as you approach the archive section, subject to Google's own behavior and policies. The website cannot change the archive or its sharing permissions. See [Your data](wiki/Your-Data.md).
 
 ## How it is built
 
@@ -128,7 +128,7 @@ npm test
 npm run build
 ```
 
-Browser checks cover archive controls, the clipboard, `.txt` download, iframe wiring with a controlled fixture, mobile navigation, reload, six viewport widths, reduced motion, no-JavaScript access, and production CSP. Google Drive availability is external and is not certified by the fixture.
+Browser checks cover the default-open archive, repeated preview toggles, collapsed keyboard access, the clipboard, `.txt` download, iframe wiring with a controlled fixture, mobile navigation, reload, six viewport widths, reduced motion, no-JavaScript preview, and production CSP. Google Drive availability is external and is not certified by the fixture.
 
 ## Deploy your own
 
