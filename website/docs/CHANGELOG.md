@@ -8,6 +8,14 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 - Versioned user guide in `website/docs/wiki/` and a script for publishing it to GitHub Wiki.
 
+## [1.2.0] - 2026-10-17
+
+### Changed
+
+- Standardized the website, introduction, artwork, metadata, documentation, and project configuration on Team 13.
+- Refreshed the Team 13 favicon, driver emblems, screenshots, and sharing images.
+- Updated the planned custom domain to match the current repository identity.
+
 ## [1.1.1] - 2026-10-17
 
 ### Changed
@@ -35,7 +43,7 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 ### Changed
 
-- Replaced the Apex navigation and footer wordmarks with the official white F1 SVG.
+- Replaced the navigation and footer wordmarks with the official white F1 SVG.
 - Updated the crew section to the four verified Team 13 members, retaining illustrative driver silhouettes.
 - Adjusted the crew grid for desktop, tablet, and phone widths and refreshed documentation and real app media.
 
@@ -43,7 +51,7 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 ### Added
 
-- ACL9 Apex identity for ACL, 9th Semester, Winter 26, with (HBOX) as a secondary team label.
+- Initial project identity for ACL, 9th Semester, Winter 26.
 - Static racing showcase with a dark lights-out intro, red car hero, anonymous crew, and project overview.
 - Google Drive link, on-demand archive preview, copy control, `.txt` link download, and GitHub ZIP access.
 - Responsive navigation, reduced-motion support, complete no-JavaScript content, and bundled OFL fonts.
@@ -53,11 +61,12 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 ### Changed
 
-- Repository identity from `acl-9th-hbox` to `acl9-winter26-apex`.
+- Set up the public project repository.
 
 The pre-existing `F1 Project Repository.zip` remains unchanged by this release. The website's version number describes the showcase, not the archived model or coursework.
 
-[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.0.1...v1.0.2

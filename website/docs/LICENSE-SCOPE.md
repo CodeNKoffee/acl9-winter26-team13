@@ -10,4 +10,4 @@ It does not grant rights to:
 - The branded imagery visible in screenshots, GIFs, and `website/og.png`; capture does not change the underlying ownership.
 - Bundled font software, which uses its respective SIL Open Font License notices in `website/assets/fonts/`.
 
-Original SVG driver silhouettes and the Apex mark are website artwork. This academic site is independent and does not claim endorsement by Formula 1, KitKat, Nestlé, Raven GP, or the fictional APXGP team.
+Original SVG driver silhouettes and the Team 13 monogram are website artwork. This academic site is independent and does not claim endorsement by Formula 1, KitKat, Nestlé, Raven GP, or other racing organizations.

@@ -1,8 +1,8 @@
-# Contributing to ACL9 Apex
+# Contributing to Team 13
 
 | | |
 |---|---|
-| Website (planned) | [acl9-winter26-apex.hatemsoliman.dev](https://acl9-winter26-apex.hatemsoliman.dev), pending owner deployment |
+| Website (planned) | [acl9-winter26-team13.hatemsoliman.dev](https://acl9-winter26-team13.hatemsoliman.dev), pending owner deployment |
 | Repository | [github.com/CodeNKoffee/acl9-winter26-team13](https://github.com/CodeNKoffee/acl9-winter26-team13) |
 | User guide | [Guide source](../website/docs/wiki/Home.md) · [Wiki](https://github.com/CodeNKoffee/acl9-winter26-team13/wiki) |
 | Report a bug | [New bug report](https://github.com/CodeNKoffee/acl9-winter26-team13/issues/new?template=bug_report.md) |

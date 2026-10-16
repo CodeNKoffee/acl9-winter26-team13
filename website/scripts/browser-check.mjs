@@ -22,7 +22,7 @@ try {
   });
   await page.goto(server.url);
   await page.locator('#intro.active').waitFor({state:'hidden'});
-  assert.match(await page.title(),/ACL9 Apex/);
+  assert.match(await page.title(),/Team 13/);
   assert.equal(await page.locator('h1').innerText(),'DRIVEN\nBY DATA.');
   assert.equal(await page.locator('iframe[src]').count(),0,'Drive must not load before a preview request');
   const drive='https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing';

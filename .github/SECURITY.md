@@ -9,7 +9,7 @@
 
 ## Report privately
 
-Use [GitHub private vulnerability reporting](https://github.com/CodeNKoffee/acl9-winter26-team13/security/advisories/new). If that route is unavailable, email maintainer **hatemthedev@gmail.com** with the subject `ACL9 Apex security report`. Do not open a public issue with exploit details or secrets. Include affected files, reproduction steps, and impact; use synthetic data.
+Use [GitHub private vulnerability reporting](https://github.com/CodeNKoffee/acl9-winter26-team13/security/advisories/new). If that route is unavailable, email maintainer **hatemthedev@gmail.com** with the subject `Team 13 security report`. Do not open a public issue with exploit details or secrets. Include affected files, reproduction steps, and impact; use synthetic data.
 
 ## Scope
 

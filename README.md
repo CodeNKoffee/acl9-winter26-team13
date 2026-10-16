@@ -1,6 +1,6 @@
 # Formula 1 Podium Prediction
 
-**ACL · 9th Semester · Winter 26 · Team 13 (HBOX)**
+**ACL · 9th Semester · Winter 26 · Team 13**
 
 Our project explores who finishes on the podium using information available after qualifying and before the race starts.
 
@@ -31,7 +31,7 @@ Our project explores who finishes on the podium using information available afte
 ## Website preview
 
 <p align="center">
-  <img src="website/docs/readme/hero.png" alt="ACL9 Apex website: white F1 logo, red racing car, and Driven by Data headline" width="100%">
+  <img src="website/docs/readme/hero.png" alt="Team 13 website: white F1 logo, red racing car, and Driven by Data headline" width="100%">
 </p>
 
 The website introduces the project and team, with direct archive links and a Google Drive preview. It does not run the prediction model in the browser.

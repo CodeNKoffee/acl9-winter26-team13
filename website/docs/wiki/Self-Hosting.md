@@ -8,7 +8,7 @@ Run `npm run check`, `npx playwright install chromium`, `npm test`, and `npm run
 
 Import `CodeNKoffee/acl9-winter26-team13`. Choose framework **Other** and leave the Vercel project root at the repository root. The root `vercel.json` sets install command `npm --prefix website ci`, build command `npm --prefix website run build`, and output directory `website/dist`. It also supplies the security headers. No environment variables are required.
 
-The metadata currently uses the planned domain https://acl9-winter26-apex.hatemsoliman.dev. Set your actual domain before publication:
+The metadata currently uses the planned domain https://acl9-winter26-team13.hatemsoliman.dev. Set your actual domain before publication:
 
 ```sh
 npm run set-url -- https://your-actual-domain.example

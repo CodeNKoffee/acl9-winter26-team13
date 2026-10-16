@@ -8,5 +8,5 @@
   <path d="M136 111c35-12 105-13 152 9l-6 52c-51-13-95-14-145-3Z" fill="url(#visor)" stroke="#65656d" stroke-width="1.2"/>
   <path d="M145 116c43-10 91-9 127 1" stroke="#868691" opacity=".5"/><path d="m135 182 32 18 44 6 48-8 25-16-15 28-58 22-60-24Z" fill="#18181d"/>
   <path d="m154 185 58 7 56-6" stroke="#a91028" stroke-width="3"/><path d="m180 62 30-5 29 6" stroke="#707078" opacity=".5"/>
-  <path d="M179 365h62" stroke="#76767e"/><path d="m198 348 13-15 14 15" stroke="#a71028" stroke-width="3"/>
+  <path d="M179 365h62" stroke="#76767e"/><path d="M199 334v14m9-14h9v7h-8m8 0v7h-9" stroke="#a71028" stroke-width="3"/>
 </svg>

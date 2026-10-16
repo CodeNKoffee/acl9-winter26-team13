@@ -15,7 +15,7 @@ for(const name of ['og.png','assets/site-preview.png']){
 }
 const server=await startPreview(4175);
 let browser;
-const frames=await mkdtemp(path.join(tmpdir(),'acl9-apex-media-'));
+const frames=await mkdtemp(path.join(tmpdir(),'team13-media-'));
 try {
   browser=await chromium.launch({headless:true});
   const page=await browser.newPage({viewport:{width:1280,height:800},reducedMotion:'reduce'});

@@ -1,17 +1,17 @@
 <a href="#run-locally"><picture>
   <source media="(prefers-color-scheme: dark)" srcset="readme/banner-dark.png">
-  <img src="readme/banner-light.png" alt="ACL9 Apex: driven by data, Formula 1 podium prediction" width="1280" height="640">
+  <img src="readme/banner-light.png" alt="Team 13: driven by data, Formula 1 podium prediction" width="1280" height="640">
 </picture></a>
 
 <div align="center">
 
 # Website development guide
 
-**ACL · 9th Semester · Winter 26 · Team (HBOX)**
+**ACL · 9th Semester · Winter 26 · Team 13**
 
 [Project archive](https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing) · [Run locally](#run-locally) · [Deploy](#deploy-your-own) · [User guide](wiki/Home.md) · [GitHub Wiki](https://github.com/CodeNKoffee/acl9-winter26-team13/wiki)
 
-<a href="CHANGELOG.md"><img alt="Version 1.1.1" src="https://img.shields.io/badge/version-1.1.1-d30b23"></a>
+<a href="CHANGELOG.md"><img alt="Version 1.2.0" src="https://img.shields.io/badge/version-1.2.0-d30b23"></a>
 <a href="../../LICENSE"><img alt="Website code: MIT" src="https://img.shields.io/badge/website_code-MIT-141414"></a>
 <img alt="HTML, CSS and JavaScript" src="https://img.shields.io/badge/stack-HTML_%2F_CSS_%2F_JS-141414">
 <img alt="ACL ninth semester, Winter 26" src="https://img.shields.io/badge/ACL-9th_semester_%C2%B7_Winter_26-141414">
@@ -24,7 +24,7 @@
 
 ## The trailer
 
-Before the race starts, the question is already there: **who makes the podium?** ACL9 Apex is the public front door for our Formula 1 podium-prediction project. A dark racing intro opens onto a red car hero, an overview of the academic brief, the four members of Team 13, and direct access to the project files.
+Before the race starts, the question is already there: **who makes the podium?** Team 13 is the public front door for our Formula 1 podium-prediction project. A dark racing intro opens onto a red car hero, an overview of the academic brief, the four members of Team 13, and direct access to the project files.
 
 The site is a showcase and archive hub. It does not execute a model or present unverified prediction scores.
 
@@ -65,7 +65,7 @@ Drive may not render every ZIP. **Open Google Drive** and **ZIP on GitHub** rema
 
 | Feature | What happens |
 |---|---|
-| Racing intro | A dark car, Apex wordmark, and five red lights fade into the red hero. |
+| Racing intro | A dark car, Team 13 wordmark, and five red lights fade into the red hero. |
 | Project overview | Explains the podium target, dataset coverage from the brief, and pre-race information cutoff. |
 | Team 13 crew | Four named silhouette cards: Youssef Hesham, Hatem Soliman, Mohammed Elazab, and Tony Makaryous. Their original student IDs appear beneath each heading. |
 | Archive access | Drive link, on-demand iframe, GitHub ZIP link, clipboard copy, and `.txt` download. |
@@ -75,7 +75,7 @@ Drive may not render every ZIP. **Open Google Drive** and **ZIP on GitHub** rema
 
 ## Gallery
 
-The navigation and footer use the official white F1 wordmark. The project identity and intro remain ACL9 Apex. Team 13 is matched to the supplied Winter 2026 course roster; the four team IDs are shown as supplied, and the roster document itself is not published.
+The navigation and footer use the official white F1 wordmark. The project identity and intro remain Team 13. Team 13 is matched to the supplied Winter 2026 course roster; the four team IDs are shown as supplied, and the roster document itself is not published.
 
 The table above shows real desktop captures. [View the full mobile capture](readme/mobile.png). The [media script](../scripts/readme-media.mjs) regenerates every screenshot and the intro GIF.
 
@@ -134,7 +134,7 @@ Browser checks cover archive controls, the clipboard, `.txt` download, iframe wi
 
 Import `CodeNKoffee/acl9-winter26-team13` into Vercel with framework **Other** and the repository root as the project root. The root `vercel.json` configures install command `npm --prefix website ci`, build command `npm --prefix website run build`, and output directory `website/dist`. No environment variables are needed.
 
-**Deployment is left to the owner.** The metadata currently reserves the planned address [acl9-winter26-apex.hatemsoliman.dev](https://acl9-winter26-apex.hatemsoliman.dev); this is not a claim that the domain is live. Once you know the actual Vercel or custom domain, update all sharing metadata before deploying:
+**Deployment is left to the owner.** The metadata currently reserves the planned address [acl9-winter26-team13.hatemsoliman.dev](https://acl9-winter26-team13.hatemsoliman.dev); this is not a claim that the domain is live. Once you know the actual Vercel or custom domain, update all sharing metadata before deploying:
 
 ```sh
 npm run set-url -- https://your-actual-domain.example

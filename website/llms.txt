@@ -1,8 +1,8 @@
-# ACL9 Apex
+# Team 13
 
-> Academic Formula 1 podium-prediction project showcase. ACL, 9th Semester, Winter 26 (HBOX).
+> Academic Formula 1 podium-prediction project showcase. ACL, 9th Semester, Winter 26.
 
-- Planned site: https://acl9-winter26-apex.hatemsoliman.dev
+- Planned site: https://acl9-winter26-team13.hatemsoliman.dev
 - Repository: https://github.com/CodeNKoffee/acl9-winter26-team13
 - Project archive: https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing
 - Guide: https://github.com/CodeNKoffee/acl9-winter26-team13/tree/main/website/docs/wiki
