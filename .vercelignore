@@ -1,0 +1,10 @@
+.git
+.github
+docs
+scripts
+node_modules
+*.zip
+*.md
+LICENSE
+test-results
+tmp
