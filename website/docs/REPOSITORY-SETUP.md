@@ -1,7 +1,7 @@
 # GitHub and deployment handoff
 
 - Name: **ACL9 Apex**
-- Repository: `CodeNKoffee/acl9-winter26-apex`
+- Repository: `CodeNKoffee/acl9-winter26-team13`
 - About: `Formula 1 podium-prediction project showcase · ACL, 9th Semester, Winter 26 (HBOX). Static racing site, project archive, and guide.`
 - Topics: `formula-1`, `podium-prediction`, `machine-learning`, `data-engineering`, `academic-project`, `winter-2026`, `html`, `css`, `javascript`, `vercel`
 - Website: planned `https://acl9-winter26-apex.hatemsoliman.dev`; set the About website only after deployment.

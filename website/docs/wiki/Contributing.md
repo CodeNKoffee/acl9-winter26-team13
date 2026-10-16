@@ -2,11 +2,11 @@
 
 | | |
 |---|---|
-| Source | [Repository](https://github.com/CodeNKoffee/acl9-winter26-apex) |
-| Setup and rules | [CONTRIBUTING.md](https://github.com/CodeNKoffee/acl9-winter26-apex/blob/main/.github/CONTRIBUTING.md) |
-| Bugs | [New issue](https://github.com/CodeNKoffee/acl9-winter26-apex/issues/new?template=bug_report.md) |
-| Security | [Private report](https://github.com/CodeNKoffee/acl9-winter26-apex/security/advisories/new) |
-| Versions | [Changelog](https://github.com/CodeNKoffee/acl9-winter26-apex/blob/main/website/docs/CHANGELOG.md) |
+| Source | [Repository](https://github.com/CodeNKoffee/acl9-winter26-team13) |
+| Setup and rules | [CONTRIBUTING.md](https://github.com/CodeNKoffee/acl9-winter26-team13/blob/main/.github/CONTRIBUTING.md) |
+| Bugs | [New issue](https://github.com/CodeNKoffee/acl9-winter26-team13/issues/new?template=bug_report.md) |
+| Security | [Private report](https://github.com/CodeNKoffee/acl9-winter26-team13/security/advisories/new) |
+| Versions | [Changelog](https://github.com/CodeNKoffee/acl9-winter26-team13/blob/main/website/docs/CHANGELOG.md) |
 
 Edit wiki pages in `website/docs/wiki/` through normal pull requests. Wiki links use page names with spaces, mapped to filenames with hyphens. The main repository is the source of truth.
 

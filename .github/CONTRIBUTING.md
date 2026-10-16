@@ -3,14 +3,14 @@
 | | |
 |---|---|
 | Website (planned) | [acl9-winter26-apex.hatemsoliman.dev](https://acl9-winter26-apex.hatemsoliman.dev), pending owner deployment |
-| Repository | [github.com/CodeNKoffee/acl9-winter26-apex](https://github.com/CodeNKoffee/acl9-winter26-apex) |
-| User guide | [Guide source](../website/docs/wiki/Home.md) · [Wiki](https://github.com/CodeNKoffee/acl9-winter26-apex/wiki) |
-| Report a bug | [New bug report](https://github.com/CodeNKoffee/acl9-winter26-apex/issues/new?template=bug_report.md) |
-| Suggest a feature | [New feature request](https://github.com/CodeNKoffee/acl9-winter26-apex/issues/new?template=feature_request.md) |
-| Open issues | [Issues](https://github.com/CodeNKoffee/acl9-winter26-apex/issues) · [good first issues](https://github.com/CodeNKoffee/acl9-winter26-apex/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) |
-| Pull requests | [Pull requests](https://github.com/CodeNKoffee/acl9-winter26-apex/pulls) |
-| Security problem | [Report privately](https://github.com/CodeNKoffee/acl9-winter26-apex/security/advisories/new), never in a public issue |
-| What changed | [CHANGELOG.md](../website/docs/CHANGELOG.md) · [Releases](https://github.com/CodeNKoffee/acl9-winter26-apex/releases) |
+| Repository | [github.com/CodeNKoffee/acl9-winter26-team13](https://github.com/CodeNKoffee/acl9-winter26-team13) |
+| User guide | [Guide source](../website/docs/wiki/Home.md) · [Wiki](https://github.com/CodeNKoffee/acl9-winter26-team13/wiki) |
+| Report a bug | [New bug report](https://github.com/CodeNKoffee/acl9-winter26-team13/issues/new?template=bug_report.md) |
+| Suggest a feature | [New feature request](https://github.com/CodeNKoffee/acl9-winter26-team13/issues/new?template=feature_request.md) |
+| Open issues | [Issues](https://github.com/CodeNKoffee/acl9-winter26-team13/issues) · [good first issues](https://github.com/CodeNKoffee/acl9-winter26-team13/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) |
+| Pull requests | [Pull requests](https://github.com/CodeNKoffee/acl9-winter26-team13/pulls) |
+| Security problem | [Report privately](https://github.com/CodeNKoffee/acl9-winter26-team13/security/advisories/new), never in a public issue |
+| What changed | [CHANGELOG.md](../website/docs/CHANGELOG.md) · [Releases](https://github.com/CodeNKoffee/acl9-winter26-team13/releases) |
 | Licence | [MIT](../LICENSE) · [Scope](../website/docs/LICENSE-SCOPE.md) |
 | Maintainer | [Hatem Soliman](https://hatemsoliman.dev) |
 
@@ -24,7 +24,7 @@ Improve accessible navigation, responsive layout, documentation accuracy, motion
 
 ## Local setup
 
-[Fork the repository](https://github.com/CodeNKoffee/acl9-winter26-apex/fork), clone your fork, and use Node.js 22 or newer:
+[Fork the repository](https://github.com/CodeNKoffee/acl9-winter26-team13/fork), clone your fork, and use Node.js 22 or newer:
 
 ```sh
 cd website

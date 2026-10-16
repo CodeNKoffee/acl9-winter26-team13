@@ -1,6 +1,6 @@
 {
   "name": "acl9-winter26-apex",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "ACL ninth-semester Winter 26 Formula 1 podium-prediction project showcase (HBOX)",
   "type": "module",

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 project_root="$(cd "$(dirname "$0")/.." && pwd)"
-wiki_remote="https://github.com/CodeNKoffee/acl9-winter26-apex.wiki.git"
+wiki_remote="https://github.com/CodeNKoffee/acl9-winter26-team13.wiki.git"
 wiki_tmp="$(mktemp -d "${TMPDIR:-/tmp}/acl9-apex-wiki.XXXXXX")"
 trap 'rm -rf "$wiki_tmp"' EXIT
 

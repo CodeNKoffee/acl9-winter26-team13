@@ -9,9 +9,9 @@
 
 **ACL · 9th Semester · Winter 26 · Team (HBOX)**
 
-[Project archive](https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing) · [Run locally](#run-locally) · [Deploy](#deploy-your-own) · [User guide](wiki/Home.md) · [GitHub Wiki](https://github.com/CodeNKoffee/acl9-winter26-apex/wiki)
+[Project archive](https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing) · [Run locally](#run-locally) · [Deploy](#deploy-your-own) · [User guide](wiki/Home.md) · [GitHub Wiki](https://github.com/CodeNKoffee/acl9-winter26-team13/wiki)
 
-<a href="CHANGELOG.md"><img alt="Version 1.1.0" src="https://img.shields.io/badge/version-1.1.0-d30b23"></a>
+<a href="CHANGELOG.md"><img alt="Version 1.1.1" src="https://img.shields.io/badge/version-1.1.1-d30b23"></a>
 <a href="../../LICENSE"><img alt="Website code: MIT" src="https://img.shields.io/badge/website_code-MIT-141414"></a>
 <img alt="HTML, CSS and JavaScript" src="https://img.shields.io/badge/stack-HTML_%2F_CSS_%2F_JS-141414">
 <img alt="ACL ninth semester, Winter 26" src="https://img.shields.io/badge/ACL-9th_semester_%C2%B7_Winter_26-141414">
@@ -132,7 +132,7 @@ Browser checks cover archive controls, the clipboard, `.txt` download, iframe wi
 
 ## Deploy your own
 
-Import `CodeNKoffee/acl9-winter26-apex` into Vercel with framework **Other** and the repository root as the project root. The root `vercel.json` configures install command `npm --prefix website ci`, build command `npm --prefix website run build`, and output directory `website/dist`. No environment variables are needed.
+Import `CodeNKoffee/acl9-winter26-team13` into Vercel with framework **Other** and the repository root as the project root. The root `vercel.json` configures install command `npm --prefix website ci`, build command `npm --prefix website run build`, and output directory `website/dist`. No environment variables are needed.
 
 **Deployment is left to the owner.** The metadata currently reserves the planned address [acl9-winter26-apex.hatemsoliman.dev](https://acl9-winter26-apex.hatemsoliman.dev); this is not a claim that the domain is live. Once you know the actual Vercel or custom domain, update all sharing metadata before deploying:
 

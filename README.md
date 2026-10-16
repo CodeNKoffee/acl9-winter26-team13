@@ -5,7 +5,7 @@
 Our project explores who finishes on the podium using information available after qualifying and before the race starts.
 
 > [!IMPORTANT]
-> ### [Download the full project ZIP](https://raw.githubusercontent.com/CodeNKoffee/acl9-winter26-apex/main/F1%20Project%20Repository.zip)
+> ### [Download the full project ZIP](https://raw.githubusercontent.com/CodeNKoffee/acl9-winter26-team13/main/F1%20Project%20Repository.zip)
 > **F1 Project Repository.zip** is the project archive, kept directly in this repository’s root.
 >
 > [Open on Google Drive](https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing) · [View the ZIP on GitHub](F1%20Project%20Repository.zip) · [Save the links as text](website/project-link.txt)
@@ -16,7 +16,7 @@ Our project explores who finishes on the podium using information available afte
 |---|---|
 | Full academic project | [F1 Project Repository.zip](F1%20Project%20Repository.zip) |
 | Showcase website source | [website/](website/) |
-| Project and archive guide | [GitHub Wiki](https://github.com/CodeNKoffee/acl9-winter26-apex/wiki) |
+| Project and archive guide | [GitHub Wiki](https://github.com/CodeNKoffee/acl9-winter26-team13/wiki) |
 | Website setup and deployment | [Development guide](website/docs/DEVELOPMENT.md) |
 
 ## The team

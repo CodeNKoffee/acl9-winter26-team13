@@ -2,7 +2,7 @@
 
 A racing-inspired front door for the ACL 9th-semester Winter 26 Formula 1 podium-prediction project, team (HBOX).
 
-[Archive](https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing) · [Source](https://github.com/CodeNKoffee/acl9-winter26-apex) · [Report a bug](https://github.com/CodeNKoffee/acl9-winter26-apex/issues/new?template=bug_report.md)
+[Archive](https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing) · [Source](https://github.com/CodeNKoffee/acl9-winter26-team13) · [Report a bug](https://github.com/CodeNKoffee/acl9-winter26-team13/issues/new?template=bug_report.md)
 
 | If you want to… | Read |
 |---|---|

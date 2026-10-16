@@ -8,6 +8,12 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 - Versioned user guide in `website/docs/wiki/` and a script for publishing it to GitHub Wiki.
 
+## [1.1.1] - 2026-10-17
+
+### Changed
+
+- Updated archive, website, and guide links to the current repository name, `acl9-winter26-team13`.
+
 ## [1.1.0] - 2026-10-17
 
 ### Changed
@@ -51,8 +57,9 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 The pre-existing `F1 Project Repository.zip` remains unchanged by this release. The website's version number describes the showcase, not the archived model or coursework.
 
-[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.2...v1.1.0
-[1.0.2]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.1...v1.0.2
-[1.0.1]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/CodeNKoffee/acl9-winter26-apex/releases/tag/v1.0.0
+[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.0.2...v1.1.0
+[1.0.2]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/CodeNKoffee/acl9-winter26-team13/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/CodeNKoffee/acl9-winter26-team13/releases/tag/v1.0.0
