@@ -10,7 +10,7 @@ Google controls supported previews and file sharing. A ZIP may not preview. Choo
 
 **Who are the drivers?**
 
-The four cards introduce Team 13: Youssef Sherif, Hatem Soliman, Mohammed Elazab, and Tony Henin. Names were matched to the supplied CSEN903 Winter 2026 team roster. The helmeted figures are illustrative silhouettes; no teammate photos or student IDs are published.
+The four cards introduce Team 13: Youssef Hesham, Hatem Soliman, Mohammed Elazab, and Tony Makaryous. Names were matched to the supplied CSEN903 Winter 2026 team roster. The helmeted figures are illustrative silhouettes; the approved team names and original student IDs are shown without teammate photos.
 
 **Can I skip the intro?**
 

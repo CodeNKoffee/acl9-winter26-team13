@@ -8,6 +8,14 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 - Versioned user guide in `docs/wiki/` and a script for publishing it to GitHub Wiki.
 
+## [1.0.2] - 2026-10-17
+
+### Changed
+
+- Used the preferred display names Youssef Hesham, Hatem Soliman, Mohammed Elazab, and Tony Makaryous.
+- Displayed each member's original student ID from the supplied roster.
+- Updated the crew documentation and real app media.
+
 ## [1.0.1] - 2026-10-17
 
 ### Changed
@@ -34,6 +42,7 @@ All notable changes are documented here using [Keep a Changelog](https://keepach
 
 The pre-existing `F1 Project Repository.zip` remains unchanged by this release. The website's version number describes the showcase, not the archived model or coursework.
 
-[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/CodeNKoffee/acl9-winter26-apex/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/CodeNKoffee/acl9-winter26-apex/releases/tag/v1.0.0

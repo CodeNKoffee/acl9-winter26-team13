@@ -13,6 +13,6 @@ A racing-inspired front door for the ACL 9th-semester Winter 26 Formula 1 podium
 | Improve the site or publish this guide | [[Contributing]] |
 | Resolve a common question | [[FAQ]] |
 
-Version 1.0.1 adds the official white F1 logo to the navigation and footer and updates the crew to the four named members of Team 13. The lights-out intro, project overview, and archive access remain available. The website introduces the course brief; model implementation and results belong to the archive.
+Version 1.0.2 uses the team's preferred display names and original student IDs. The official white F1 logo appears in the navigation and footer, alongside the four-member Team 13 crew. The lights-out intro, project overview, and archive access remain available. The website introduces the course brief; model implementation and results belong to the archive.
 
 The planned website address is https://acl9-winter26-apex.hatemsoliman.dev. Deployment and domain connection are left to the owner.

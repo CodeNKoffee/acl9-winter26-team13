@@ -11,7 +11,7 @@
 
 [Project archive](https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing) · [Run locally](#run-locally) · [Deploy](#deploy-your-own) · [User guide](docs/wiki/Home.md) · [GitHub Wiki](https://github.com/CodeNKoffee/acl9-winter26-apex/wiki)
 
-<a href="CHANGELOG.md"><img alt="Version 1.0.1" src="https://img.shields.io/badge/version-1.0.1-d30b23"></a>
+<a href="CHANGELOG.md"><img alt="Version 1.0.2" src="https://img.shields.io/badge/version-1.0.2-d30b23"></a>
 <a href="LICENSE"><img alt="Website code: MIT" src="https://img.shields.io/badge/website_code-MIT-141414"></a>
 <img alt="HTML, CSS and JavaScript" src="https://img.shields.io/badge/stack-HTML_%2F_CSS_%2F_JS-141414">
 <img alt="ACL ninth semester, Winter 26" src="https://img.shields.io/badge/ACL-9th_semester_%C2%B7_Winter_26-141414">
@@ -66,7 +66,7 @@ Drive may not render every ZIP. **Open Google Drive** and **ZIP on GitHub** rema
 |---|---|
 | Racing intro | A dark car, Apex wordmark, and five red lights fade into the red hero. |
 | Project overview | Explains the podium target, dataset coverage from the brief, and pre-race information cutoff. |
-| Team 13 crew | Four named silhouette cards: Youssef Sherif, Hatem Soliman, Mohammed Elazab, and Tony Henin. Full roster names appear beneath each heading. |
+| Team 13 crew | Four named silhouette cards: Youssef Hesham, Hatem Soliman, Mohammed Elazab, and Tony Makaryous. Their original student IDs appear beneath each heading. |
 | Archive access | Drive link, on-demand iframe, GitHub ZIP link, clipboard copy, and `.txt` download. |
 | Responsive layout | Desktop composition and stacked mobile sections with an accessible navigation menu. |
 | Motion controls | Honors reduced-motion preferences; the intro can be replayed from the footer. |
@@ -74,7 +74,7 @@ Drive may not render every ZIP. **Open Google Drive** and **ZIP on GitHub** rema
 
 ## Gallery
 
-The navigation and footer use the official white F1 wordmark. The project identity and intro remain ACL9 Apex. Team 13 is matched to the supplied Winter 2026 course roster; student IDs and the roster document are not published.
+The navigation and footer use the official white F1 wordmark. The project identity and intro remain ACL9 Apex. Team 13 is matched to the supplied Winter 2026 course roster; the four team IDs are shown as supplied, and the roster document itself is not published.
 
 The table above shows real desktop captures. [View the full mobile capture](docs/readme/mobile.png). The [media script](scripts/readme-media.mjs) regenerates every screenshot and the intro GIF.
 
