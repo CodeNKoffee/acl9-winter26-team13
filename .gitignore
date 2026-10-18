@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.vercel/
+.env
+.env.*
+!.env.example
+.DS_Store
+test-results/
+playwright-report/
+tmp/
+*-my-data.json
+*.log
+# Kaggle CSVs for running the notebook locally
+/data/

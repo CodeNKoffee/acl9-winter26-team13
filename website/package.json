@@ -1,0 +1,18 @@
+{
+  "name": "acl9-winter26-team13",
+  "version": "1.2.2",
+  "private": true,
+  "description": "ACL ninth-semester Winter 26 Formula 1 podium-prediction project showcase",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "test": "node scripts/browser-check.mjs",
+    "media": "node scripts/readme-media.mjs",
+    "set-url": "node scripts/set-site-url.mjs"
+  },
+  "devDependencies": { "playwright": "1.62.1", "sharp": "0.35.5" }
+}

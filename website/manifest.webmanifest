@@ -1,0 +1,44 @@
+{
+  "id": "/",
+  "name": "Team 13 \u00b7 Winter 26",
+  "short_name": "Team 13",
+  "description": "Formula 1 podium-prediction project archive and team showcase.",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#111113",
+  "theme_color": "#d30b23",
+  "categories": [
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/site-preview.png",
+      "sizes": "1280x640",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Team 13 project showcase"
+    }
+  ]
+}

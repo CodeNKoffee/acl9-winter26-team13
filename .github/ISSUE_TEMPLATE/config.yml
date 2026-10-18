@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Open the project archive
+    url: https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing
+    about: Access the full project files on Google Drive.
+  - name: Read the user guide
+    url: https://github.com/CodeNKoffee/acl9-winter26-team13/tree/main/website/docs/wiki
+    about: Archive access, privacy, deployment, and contribution instructions.
+  - name: Report a security problem privately
+    url: https://github.com/CodeNKoffee/acl9-winter26-team13/security/advisories/new
+    about: Please do not post security problems in public issues.
+  - name: Contributing guide
+    url: https://github.com/CodeNKoffee/acl9-winter26-team13/blob/main/.github/CONTRIBUTING.md
+    about: Local setup, accepted changes, and release versions.

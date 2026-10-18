@@ -1,0 +1,10 @@
+# Team 13
+
+> Academic Formula 1 podium-prediction project showcase. ACL, 9th Semester, Winter 26.
+
+- Planned site: https://acl9-winter26-team13.hatemsoliman.dev
+- Repository: https://github.com/CodeNKoffee/acl9-winter26-team13
+- Project archive: https://drive.google.com/file/d/1DqSlh85tX_Q4ai2vMS4IBDJC6TlLHCPO/view?usp=sharing
+- Guide: https://github.com/CodeNKoffee/acl9-winter26-team13/tree/main/website/docs/wiki
+
+The website presents the project brief, the four named members of Team 13 using illustrative driver silhouettes, and archive links. It does not run a prediction model or claim verified model results. The existing ZIP is maintained separately by its owner. Website code uses MIT; third-party media and archive contents are excluded.

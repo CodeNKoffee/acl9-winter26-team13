@@ -1,0 +1,9 @@
+.git
+.github
+website/docs
+website/node_modules
+website/dist
+*.zip
+*.md
+LICENSE
+tmp
