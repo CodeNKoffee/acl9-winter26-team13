@@ -1,0 +1,1716 @@
+From 4f133a0a72363041d352889d3dcd7cb283a7d755 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 14 Nov 2026 18:20:34 +0000
+Subject: [PATCH] Redesign the student portal UI
+
+Make the student view feel less rigid and more like "Duolingo for the
+kid", inside the Phase 1 palette (no red, navy text, sky and azure as
+fills) with sun yellow added for stars only.
+
+- New student shell: rounded Feather/Nunito headings, pressable 3D
+  buttons and tiles, tab bar that stays on screen, messages sheet
+  behind the bell.
+- Home: state-based hero card, quiz tracker, practice card, Gap Map
+  drawn as a learning path.
+- Hand-in: photo tips, camera viewfinder, thumbnails with status,
+  checking step, real photo picker with an in-browser sharpness check.
+- Results: score ring, strengths and next steps, marks per question,
+  step-by-step "How to fix it".
+- Practice: pick then Check, feedback panel with a same-size-pieces
+  drawing, Play again.
+- Progress: score chart with list view, skill levels in words.
+- Fix: reloading Hand in after sending no longer restarts the wizard.
+
+Teacher and parent views are unchanged.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01GXURiyKXk9bjfXp43gcCuU
+---
+ CHANGELOG.md                        |  17 ++
+ app/globals.css                     |  44 +++++
+ app/student/hand-in/page.tsx        | 275 ++++++++++++++++++++--------
+ app/student/page.tsx                | 181 +++++++++++-------
+ app/student/practice/page.tsx       | 127 ++++++++++---
+ app/student/progress/page.tsx       | 119 +++++++++---
+ app/student/results/page.tsx        | 192 ++++++++++++++-----
+ components/Shells.tsx               |  42 -----
+ components/student/Bits.tsx         | 108 +++++++++++
+ components/student/Kid.tsx          | 132 +++++++++++++
+ components/student/StudentShell.tsx | 146 +++++++++++++++
+ package-lock.json                   |  10 +
+ package.json                        |   1 +
+ 13 files changed, 1105 insertions(+), 289 deletions(-)
+ create mode 100644 components/student/Bits.tsx
+ create mode 100644 components/student/Kid.tsx
+ create mode 100644 components/student/StudentShell.tsx
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 2211dc0..c0494e1 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -5,6 +5,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
+ 
+ ## [Unreleased]
+ 
++### Changed
++- Student portal redesign, closer to "Duolingo for the kid": rounded Feather/Nunito headings, chunky pressable buttons and tiles, a tab bar that stays in reach, a soft sky backdrop around the phone on wide screens. Palette, no-red rule and contrast rules from Phase 1 are unchanged; sun yellow is added for stars only.
++- Home: one hero card per state (due, being checked, back), a "where is my quiz" tracker, a practice card when Mrs Rasha recommends one, and the Gap Map as a learning path with a connecting trail.
++- Hand-in: tips for a clear photo, a camera viewfinder with page counter, page thumbnails with status, a short "Lukki is checking" step, and a celebration after sending.
++- Results: score ring, "You're great at" and "Let's practise" chips, full question text with marks per question, and "How to fix it" showing each mark-scheme step the pupil did or has not done yet.
++- Practice: pick, then Check; feedback panel with a "same-size pieces" drawing of the tip; the answer is not given away after a miss; Play again.
++- Progress: score chart with a list view and a tap or hover readout, and skill levels in words.
++
++### Added
++- Messages sheet behind the bell (was a link back to Home), with class notes.
++- "My photos" now opens the device's photos and runs a simple sharpness check in the browser.
++
++### Fixed
++- Reloading Hand in after sending no longer restarts the wizard.
++- The student tab bar stays on screen on phones instead of sitting below the content.
++- Gap Map topics no longer overlap or spill past the right edge.
++
+ ## [1.0.0] - 2026-11-11
+ 
+ ### Added
+diff --git a/app/globals.css b/app/globals.css
+index d89e30b..5a0724f 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -4,6 +4,8 @@
+ @import "@fontsource/inter/600.css";
+ @import "@fontsource/inter/700.css";
+ @import "@fontsource/patrick-hand/400.css";
++@import "@fontsource/nunito/800.css";
++@import "@fontsource/nunito/900.css";
+ 
+ /* Feather Bold (Duolingo / Fontsmith) is never shipped with this repo.
+    It is used only where it is already installed on the viewer's computer;
+@@ -19,6 +21,10 @@
+   --color-cream: #F8FBFE;
+   --color-rule: #D6E2EE;
+   --color-muted: #5A6B7A;
++  --color-sun: #FFC83D;      /* stars and celebration only; navy text on it is 9:1 */
++  --color-edge: #0A1F30;     /* 3D edge under navy buttons */
++  --color-sky-edge: #3D86C2; /* 3D edge under sky buttons and done path nodes */
++  --color-rule-edge: #C3D3E2;/* 3D edge under white cards */
+   --font-sans: 'Inter', system-ui, sans-serif;
+   --font-display: 'Feather Local', 'Inter', system-ui, sans-serif;
+   --font-hand: 'Patrick Hand', 'Comic Sans MS', cursive;
+@@ -32,3 +38,41 @@ html, body { background: var(--color-ice); color: var(--color-navy); }
+ @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
+ .bob { animation: bob 2.4s ease-in-out infinite; }
+ @media (prefers-reduced-motion: reduce) { .pop, .bob { animation: none; } }
++
++/* ---------- Student portal ("Duolingo for the kid") ----------
++   Scoped to .kid so the teacher and parent views keep their calm look.
++   Headings use Feather Bold where it is installed, else Nunito (rounded, OFL). */
++.kid { --font-display: 'Feather Local', 'Nunito', 'Inter', system-ui, sans-serif; --ease: cubic-bezier(.2,.8,.2,1); }
++.kid .font-display { font-weight: 900; letter-spacing: -0.005em; }
++
++/* Chunky pressable buttons and tiles: a solid bottom edge that the press sinks into. */
++.press { position: relative; transition: transform 150ms var(--ease), box-shadow 150ms var(--ease), background-color 150ms var(--ease); box-shadow: 0 4px 0 var(--edge, var(--color-rule-edge)); }
++.press:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--edge, var(--color-rule-edge)); transition-duration: 90ms; }
++@media (hover: hover) and (pointer: fine) {
++  .press:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 5px 0 var(--edge, var(--color-rule-edge)); }
++  .press:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--edge, var(--color-rule-edge)); }
++  .lift { transition: transform 180ms var(--ease), box-shadow 180ms var(--ease); }
++  .lift:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -12px rgb(16 44 65 / .22); }
++}
++
++@keyframes rise { from { transform: translateY(8px); opacity: 0 } to { transform: none; opacity: 1 } }
++.rise { animation: rise .28s var(--ease, ease-out) both; }
++@keyframes sheet { from { transform: translateY(100%) } to { transform: none } }
++.sheet { animation: sheet .24s var(--ease, ease-out) both; }
++@keyframes fade { from { opacity: 0 } to { opacity: 1 } }
++.fade { animation: fade .2s ease-out both; }
++@keyframes ring { from { stroke-dashoffset: var(--full) } }
++.ring-draw { animation: ring .9s var(--ease, ease-out) .15s both; }
++@keyframes scanline { 0% { top: 4% } 50% { top: 92% } 100% { top: 4% } }
++.scanline { animation: scanline 1.6s ease-in-out infinite; }
++@keyframes flash { 0% { opacity: .9 } 100% { opacity: 0 } }
++.flash { animation: flash .35s ease-out both; }
++@keyframes burst { 0% { transform: translate(0,0) scale(.4); opacity: 0 } 25% { opacity: 1 } 100% { transform: translate(var(--x), var(--y)) scale(1); opacity: 0 } }
++.burst { animation: burst 1.1s var(--ease, ease-out) both; }
++@keyframes pulse-dot { 0%,100% { transform: scale(1); opacity: 1 } 50% { transform: scale(1.35); opacity: .55 } }
++.pulse-dot { animation: pulse-dot 1.6s ease-in-out infinite; }
++@media (prefers-reduced-motion: reduce) {
++  .press, .lift { transition: none; }
++  .rise, .sheet, .fade, .ring-draw, .scanline, .flash, .pulse-dot { animation: none; }
++  .burst { display: none; }
++}
+diff --git a/app/student/hand-in/page.tsx b/app/student/hand-in/page.tsx
+index a5b6973..afaf9b2 100644
+--- a/app/student/hand-in/page.tsx
++++ b/app/student/hand-in/page.tsx
+@@ -1,20 +1,68 @@
+ 'use client';
+-import { useState } from 'react';
+-import { StudentShell, LukkiSays } from '@/components/Shells';
+-import { Btn, Card, Label, LinkBtn } from '@/components/ui';
++import { useEffect, useRef, useState } from 'react';
++import { StudentShell } from '@/components/student/StudentShell';
++import { Icon, KidButton, KidLink, LukkiBubble, Pill, StarBurst, Tile } from '@/components/student/Kid';
++import { Tracker } from '@/components/student/Bits';
++import Lukki from '@/components/Lukki';
+ import Scan from '@/components/Scan';
+-import { useStore } from '@/lib/store';
++import { useStore, type AnswerState } from '@/lib/store';
+ 
+ const PAGES = [['q1', 'q2', 'q3'], ['q4', 'q5']];
+-type Shot = { page: number; blurry: boolean };
++const STEPS = ['Pick', 'Photos', 'Check', 'Send'];
++type Shot = { page: number; blurry: boolean; src?: string };
++
++// A simple sharpness check that runs in the browser: the variance of the Laplacian
++// on a small grey copy of the photo. Low variance means few sharp edges, so blurry.
++// The photo never leaves the device.
++const SHARP_MIN = 40;
++async function sharpness(file: File) {
++  const bmp = await createImageBitmap(file);
++  const w = 256, h = Math.max(1, Math.round((bmp.height / bmp.width) * w));
++  const c = document.createElement('canvas'); c.width = w; c.height = h;
++  const ctx = c.getContext('2d', { willReadFrequently: true })!;
++  ctx.drawImage(bmp, 0, 0, w, h);
++  const px = ctx.getImageData(0, 0, w, h).data;
++  const g = new Float32Array(w * h);
++  for (let i = 0; i < w * h; i++) g[i] = 0.299 * px[i * 4] + 0.587 * px[i * 4 + 1] + 0.114 * px[i * 4 + 2];
++  let sum = 0, sq = 0, n = 0;
++  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
++    const i = y * w + x; const l = 4 * g[i] - g[i - 1] - g[i + 1] - g[i - w] - g[i + w];
++    sum += l; sq += l * l; n++;
++  }
++  return n ? sq / n - (sum / n) ** 2 : 0;
++}
+ 
+ export default function HandIn() {
+-  const { s, d } = useStore();
++  return (
++    <StudentShell title="Hand in my work" kicker="Maths · Fractions quiz">
++      <Wizard />
++    </StudentShell>
++  );
++}
++
++function Wizard() {
++  const { s, d, ready } = useStore();
+   const sub = s.submissions['nour-frac'];
+-  const [step, setStep] = useState(sub.status === 'due' ? 0 : 4);
++  const [step, setStep] = useState(0);
+   const [shots, setShots] = useState<Shot[]>([]);
+   const [tries, setTries] = useState(0);
+-  const current = shots.length < PAGES.length ? shots.length : -1;
++  const [flash, setFlash] = useState(0);
++  const [checking, setChecking] = useState(false);
++  const [reading, setReading] = useState(false);
++  const [justSent, setJustSent] = useState(false);
++  const file = useRef<HTMLInputElement>(null);
++
++  // Opened after handing in (or after a reload): show where the quiz is, not the wizard again.
++  useEffect(() => { if (ready && sub.status !== 'due') setStep(4); }, [ready]); // eslint-disable-line react-hooks/exhaustive-deps
++  useEffect(() => () => shots.forEach((x) => x.src && URL.revokeObjectURL(x.src)), []); // eslint-disable-line react-hooks/exhaustive-deps
++  useEffect(() => {
++    if (step !== 2) return;
++    setChecking(true);
++    const t = setTimeout(() => setChecking(false), 1100);
++    return () => clearTimeout(t);
++  }, [step]);
++
++  const current = PAGES.findIndex((_, p) => !shots.some((x) => x.page === p));
+   const blurry = shots.find((x) => x.blurry);
+ 
+   const snap = () => {
+@@ -22,123 +70,190 @@ export default function HandIn() {
+     const isBlurry = current === 1 && tries === 0;
+     setShots([...shots, { page: current, blurry: isBlurry }]);
+     if (isBlurry) setTries(1);
++    setFlash((k) => k + 1);
++  };
++  const pick = async (list: FileList | null) => {
++    if (!list?.length) return;
++    setReading(true);
++    let next = [...shots];
++    for (const f of Array.from(list)) {
++      const page = PAGES.findIndex((_, p) => !next.some((x) => x.page === p));
++      if (page < 0) break;
++      let isBlurry = true;
++      try { isBlurry = (await sharpness(f)) < SHARP_MIN; } catch { /* not an image we can read: ask for a retake */ }
++      next = [...next, { page, blurry: isBlurry, src: URL.createObjectURL(f) }];
++    }
++    setShots(next); setReading(false);
++    if (file.current) file.current.value = '';
+   };
+-  const retake = () => setShots(shots.filter((x) => !x.blurry));
+-  const steps = ['Pick', 'Photos', 'Check', 'Send'];
++  const retake = () => { setShots(shots.filter((x) => !x.blurry)); setStep(1); };
++
++  if (!ready) return <div className="h-[60vh]" aria-busy="true" />;
+ 
+   return (
+-    <StudentShell title="Hand in my work">
++    <div>
+       {step < 4 && (
+-        <ol className="flex gap-1.5 mb-4" aria-label="Steps">
+-          {steps.map((t, i) => (
+-            <li key={t} className="flex-1 text-center text-[11px] font-semibold">
+-              <div className={`h-2.5 rounded-full mb-1 ${i <= step ? 'bg-azure' : 'bg-tint'}`} />
+-              <span className={i === step ? 'text-navy' : 'text-muted'}>{i + 1} {t}</span>
++        <ol className="grid grid-cols-4 gap-1.5 mb-5" aria-label={`Step ${step + 1} of 4: ${STEPS[step]}`}>
++          {STEPS.map((t, i) => (
++            <li key={t} aria-current={i === step ? 'step' : undefined} className="text-center">
++              <div className={`h-3 rounded-full transition-colors ${i <= step ? 'bg-azure' : 'bg-tint'}`} />
++              <span className={`mt-1.5 inline-flex items-center gap-1 text-[12px] ${i === step ? 'font-extrabold text-navy' : i < step ? 'font-semibold text-navy' : 'font-semibold text-muted'}`}>
++                {i < step ? <Icon name="check" size={13} strokeWidth={3.2} /> : <span>{i + 1}</span>}{t}
++              </span>
+             </li>
+           ))}
+         </ol>
+       )}
+ 
+       {step === 0 && (
+-        <div className="space-y-4">
+-          <LukkiSays>Which work are you handing in?</LukkiSays>
+-          <button onClick={() => setStep(1)} className="w-full text-left">
+-            <Card className="p-5 border-2 border-azure">
+-              <Label>Due Sunday · Maths</Label>
+-              <div className="font-display text-xl">Fractions quiz</div>
+-              <div className="text-sm text-muted">2 pages · Mrs Rasha</div>
+-            </Card>
+-          </button>
+-          <Btn big className="w-full" onClick={() => setStep(1)}>Next: take photos</Btn>
++        <div className="space-y-4 rise">
++          <LukkiBubble still>Which work are you handing in?</LukkiBubble>
++          <div role="radiogroup" aria-label="Work to hand in">
++            <button type="button" role="radio" aria-checked="true" onClick={() => setStep(1)}
++              className="press w-full text-left flex items-center gap-3.5 rounded-3xl border-[3px] border-navy bg-white p-4 [--edge:var(--color-navy)]">
++              <span className="grid place-items-center w-14 h-14 rounded-2xl bg-tint shrink-0"><Icon name="paper" size={26} /></span>
++              <span className="flex-1">
++                <span className="block font-display text-[19px] leading-tight">Fractions quiz</span>
++                <span className="block text-[13px] text-muted mt-0.5">Due Sunday · 2 pages · Mrs Rasha</span>
++              </span>
++              <span className="grid place-items-center w-8 h-8 rounded-full bg-navy text-white shrink-0"><Icon name="check" size={18} strokeWidth={3} /></span>
++            </button>
++          </div>
++          <Tile className="p-4">
++            <h2 className="font-display text-[16px] mb-2">Tips for a clear photo</h2>
++            <ul className="space-y-2 text-[14px]">
++              <li className="flex items-center gap-2.5"><span className="grid place-items-center w-8 h-8 rounded-xl bg-ice shrink-0"><Icon name="paper" size={17} /></span>Lay the page flat on the table</li>
++              <li className="flex items-center gap-2.5"><span className="grid place-items-center w-8 h-8 rounded-xl bg-ice shrink-0"><Icon name="eye" size={17} /></span>Use good light, no shadows</li>
++              <li className="flex items-center gap-2.5"><span className="grid place-items-center w-8 h-8 rounded-xl bg-ice shrink-0"><Icon name="camera" size={17} /></span>Fit the whole page in the frame</li>
++            </ul>
++          </Tile>
++          <KidButton className="w-full" onClick={() => setStep(1)}>Next: take photos</KidButton>
+         </div>
+       )}
+ 
+       {step === 1 && (
+-        <div className="space-y-3">
++        <div className="space-y-4">
+           {current >= 0 ? (
+-            <>
+-              <div className="relative rounded-3xl bg-navy p-4" aria-label="Camera">
+-                <div className="relative">
+-                  <Scan examId="frac" answers={sub.answers} compact only={PAGES[current]} />
+-                  <div className="absolute inset-[-6px] border-[3px] border-dashed border-sky rounded-xl pointer-events-none" />
+-                </div>
+-                <p className="text-center text-white text-sm mt-3">Page {current + 1} of 2 · fit the whole page in the frame</p>
+-                <div className="flex justify-center mt-3">
+-                  <button onClick={snap} aria-label={`Take photo of page ${current + 1}`} className="w-[72px] h-[72px] rounded-full bg-white border-[6px] border-sky active:scale-95 transition" />
+-                </div>
++            <div className="rise relative rounded-[30px] bg-navy p-3 pb-4 overflow-hidden" role="group" aria-label="Camera">
++              <div className="flex items-center justify-between px-2 pt-1">
++                <Pill tone="sun">Page {current + 1} of 2</Pill>
++                <span className="text-[13px] text-white/85">{reading ? 'Lukki is checking…' : 'Fit the whole page'}</span>
+               </div>
+-              <button className="w-full text-sm text-muted underline">or choose photos from the tablet</button>
+-            </>
++              <div className="relative mx-1 mt-3 rounded-2xl bg-[#1B3A54] p-4">
++                <div className="rotate-[-1.2deg]"><Scan examId="frac" answers={sub.answers as AnswerState[]} compact only={PAGES[current]} /></div>
++                {['left-1.5 top-1.5 border-l-4 border-t-4 rounded-tl-xl', 'right-1.5 top-1.5 border-r-4 border-t-4 rounded-tr-xl', 'left-1.5 bottom-1.5 border-l-4 border-b-4 rounded-bl-xl', 'right-1.5 bottom-1.5 border-r-4 border-b-4 rounded-br-xl'].map((c) => (
++                  <span key={c} aria-hidden className={`absolute w-8 h-8 border-sky ${c}`} />
++                ))}
++                {flash > 0 && <span key={flash} aria-hidden className="flash absolute inset-0 rounded-2xl bg-white opacity-0" />}
++              </div>
++              <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center px-2">
++                <button type="button" onClick={() => file.current?.click()} disabled={reading}
++                  className="justify-self-start flex flex-col items-center gap-1 text-white min-h-11 rounded-xl px-1">
++                  <span className="grid place-items-center w-12 h-12 rounded-2xl bg-white/12 ring-1 ring-white/25"><Icon name="image" /></span>
++                  <span className="text-[12px] font-semibold">My photos</span>
++                </button>
++                <button type="button" onClick={snap} disabled={reading} aria-label={`Take photo of page ${current + 1}`}
++                  className="grid place-items-center w-[78px] h-[78px] rounded-full bg-white ring-[6px] ring-sky transition-transform active:scale-90 disabled:opacity-50">
++                  <span className="w-[58px] h-[58px] rounded-full border-[3px] border-navy/15" />
++                </button>
++                <span />
++              </div>
++              <input ref={file} type="file" accept="image/*" multiple className="sr-only" tabIndex={-1} aria-hidden onChange={(e) => pick(e.target.files)} />
++            </div>
+           ) : (
+-            <LukkiSays mood="cheer">Both pages captured! Let’s check them.</LukkiSays>
++            <LukkiBubble mood="cheer">Both pages are in! Let’s check them.</LukkiBubble>
+           )}
+-          <Thumbs shots={shots} />
+-          {current < 0 && <Btn big className="w-full" onClick={() => setStep(2)}>Next: check my pages</Btn>}
++          <Thumbs shots={shots} answers={sub.answers} />
++          {current < 0 && <KidButton className="w-full" onClick={() => setStep(2)}>Next: check my pages</KidButton>}
+         </div>
+       )}
+ 
+       {step === 2 && (
+         <div className="space-y-4">
+-          {blurry ? (
++          {checking ? (
+             <>
+-              <LukkiSays mood="think"><b>Page 2 is blurry.</b> I can’t read it yet. Can you take it again?</LukkiSays>
+-              <div className="grid grid-cols-2 gap-3">
+-                {shots.map((x) => (
+-                  <div key={x.page} className={`rounded-xl p-1.5 ${x.blurry ? 'ring-4 ring-navy' : 'ring-1 ring-rule'}`}>
+-                    <Scan examId="frac" answers={sub.answers} compact blur={x.blurry} only={PAGES[x.page]} />
+-                    <div className="text-center text-xs font-semibold mt-1">{x.blurry ? '! Page 2: blurry' : `✓ Page ${x.page + 1}: clear`}</div>
+-                  </div>
+-                ))}
+-              </div>
+-              <Btn big className="w-full" onClick={() => { retake(); setStep(1); }}>Take page 2 again</Btn>
++              <LukkiBubble mood="think">Let me look at your pages…</LukkiBubble>
++              <Thumbs shots={shots} answers={sub.answers} big scanning />
++            </>
++          ) : blurry ? (
++            <>
++              <LukkiBubble mood="think"><b>Page {blurry.page + 1} is blurry.</b> I can’t read it yet. Can you take it again?</LukkiBubble>
++              <Thumbs shots={shots} answers={sub.answers} big />
++              <KidButton className="w-full" onClick={retake}><Icon name="retry" />Take page {blurry.page + 1} again</KidButton>
+             </>
+           ) : (
+             <>
+-              <LukkiSays mood="cheer">All pages are clear. I can read every answer!</LukkiSays>
+-              <Thumbs shots={shots} />
+-              <Btn big className="w-full" onClick={() => setStep(3)}>Next: send</Btn>
++              <LukkiBubble mood="cheer">All pages are clear. I can read every answer!</LukkiBubble>
++              <Thumbs shots={shots} answers={sub.answers} big />
++              <KidButton className="w-full" onClick={() => setStep(3)}>Next: send</KidButton>
+             </>
+           )}
+         </div>
+       )}
+ 
+       {step === 3 && (
+-        <div className="space-y-4">
+-          <Card className="p-5">
+-            <Label>Ready to send</Label>
+-            <div className="font-display text-xl">Fractions quiz · 2 pages</div>
+-            <p className="text-sm text-muted mt-2">Mrs Rasha will check it first. You’ll see your result after she does.</p>
+-          </Card>
+-          <Btn big className="w-full" onClick={() => { d({ type: 'submit', id: 'nour-frac' }); setStep(4); }}>Send to Mrs Rasha</Btn>
+-          <Btn kind="ghost" className="w-full" onClick={() => setStep(2)}>Back</Btn>
++        <div className="space-y-4 rise">
++          <Tile className="p-5">
++            <h2 className="font-display text-[20px]">Ready to send</h2>
++            <div className="flex items-center gap-3 mt-3 rounded-2xl bg-ice px-3 py-2.5">
++              <span className="grid place-items-center w-10 h-10 rounded-full bg-navy text-white font-display text-[17px]" aria-hidden>R</span>
++              <span className="text-[15px]"><span className="block text-[12px] font-bold text-muted">To</span><b>Mrs Rasha</b></span>
++              <span className="ml-auto text-[13px] font-semibold text-muted">Fractions quiz · 2 pages</span>
++            </div>
++            <div className="mt-4"><Thumbs shots={shots} answers={sub.answers} /></div>
++            <p className="text-[14px] text-muted mt-4">Mrs Rasha checks it first. You’ll see your result after she does.</p>
++          </Tile>
++          <KidButton className="w-full" onClick={() => { d({ type: 'submit', id: 'nour-frac' }); setJustSent(true); setStep(4); }}><Icon name="send" />Send to Mrs Rasha</KidButton>
++          <KidButton kind="white" size="md" className="w-full" onClick={() => setStep(2)}><Icon name="left" size={18} />Back</KidButton>
+         </div>
+       )}
+ 
+       {step === 4 && (
+-        <div className="space-y-5 pt-6 text-center">
+-          <LukkiSays mood="cheer">Sent! Well done, Nour. Mrs Rasha will check your quiz soon.</LukkiSays>
+-          <Card className="p-5 text-left">
+-            <div className="text-sm">Fractions quiz · handed in</div>
+-            <div className="mt-2 flex items-center gap-2 text-sm font-semibold"><span className="w-2.5 h-2.5 rounded-full bg-sky animate-pulse" />Waiting for your teacher</div>
+-          </Card>
+-          <LinkBtn href="/student/" kind="soft" className="w-full">Back home</LinkBtn>
+-        </div>
++        sub.status === 'released' ? (
++          <div className="space-y-4 pt-2 rise">
++            <LukkiBubble mood="happy">Nothing to hand in right now. Your Fractions quiz is already back!</LukkiBubble>
++            <KidLink href="/student/results/" className="w-full"><Icon name="star" />See my feedback</KidLink>
++          </div>
++        ) : (
++          <div className="space-y-5 pt-2 rise">
++            <div className="relative text-center pt-2">
++              {justSent && <StarBurst />}
++              <Lukki size={128} mood="cheer" className="mx-auto bob" />
++              <h2 className="font-display text-[30px] mt-2">{justSent ? 'Sent!' : 'All handed in'}</h2>
++              <p className="text-[16px] text-muted mt-1">{justSent ? 'Well done, Nour. Mrs Rasha will check your quiz soon.' : 'Mrs Rasha has your Fractions quiz.'}</p>
++            </div>
++            <Tile className="p-5 text-left"><Tracker status={sub.status} /></Tile>
++            <KidLink href="/student/" kind="white" size="md" className="w-full"><Icon name="home" size={18} />Back home</KidLink>
++          </div>
++        )
+       )}
+-    </StudentShell>
++    </div>
+   );
+ }
+ 
+-function Thumbs({ shots }: { shots: Shot[] }) {
++function Thumbs({ shots, answers, big = false, scanning = false }: { shots: Shot[]; answers: AnswerState[]; big?: boolean; scanning?: boolean }) {
+   return (
+-    <div className="flex gap-2">
+-      {[0, 1].map((p) => {
++    <ul className="grid grid-cols-2 gap-3" aria-label="Your pages">
++      {PAGES.map((qs, p) => {
+         const sh = shots.find((x) => x.page === p);
+         return (
+-          <div key={p} className={`flex-1 h-16 rounded-xl grid place-items-center text-xs font-semibold ${sh ? (sh.blurry ? 'bg-white ring-2 ring-navy' : 'bg-tint') : 'border-2 border-dashed border-rule text-muted'}`}>
+-            {sh ? (sh.blurry ? `! Page ${p + 1}` : `✓ Page ${p + 1}`) : `Page ${p + 1}`}
+-          </div>
++          <li key={p} className="relative">
++            <div className={`relative overflow-hidden rounded-2xl ${big ? 'h-44' : 'h-28'} ${sh ? (sh.blurry && !scanning ? 'ring-[3px] ring-navy bg-white' : 'ring-2 ring-rule bg-white') : 'border-2 border-dashed border-rule bg-ice grid place-items-center'}`}>
++              {sh ? (
++                sh.src
++                  ? <img src={sh.src} alt={`Your photo of page ${p + 1}`} className="w-full h-full object-cover" style={{ filter: sh.blurry && !scanning ? 'blur(1.5px)' : undefined }} />
++                  : <div className="p-1.5 pointer-events-none"><Scan examId="frac" answers={answers} compact blur={sh.blurry} only={qs} /></div>
++              ) : <span className="text-[13px] font-bold text-muted">Page {p + 1}</span>}
++              {scanning && sh && <span aria-hidden className="scanline absolute inset-x-2 h-1 rounded-full bg-azure shadow-[0_0_12px_2px_rgba(110,185,242,.8)]" />}
++            </div>
++            {sh && !scanning && (
++              <span className="absolute left-2 bottom-2">
++                {sh.blurry ? <Pill tone="navy">! Too blurry</Pill> : <Pill tone="sky"><Icon name="check" size={13} strokeWidth={3.2} />Page {p + 1}</Pill>}
++              </span>
++            )}
++          </li>
+         );
+       })}
+-    </div>
++    </ul>
+   );
+ }
+diff --git a/app/student/page.tsx b/app/student/page.tsx
+index 73bdc84..31fefe1 100644
+--- a/app/student/page.tsx
++++ b/app/student/page.tsx
+@@ -1,81 +1,134 @@
+ 'use client';
+ import Link from 'next/link';
+-import { StudentShell, LukkiSays } from '@/components/Shells';
+-import { Card, LinkBtn, Label, Chip } from '@/components/ui';
++import { StudentShell, useInbox, iconFor } from '@/components/student/StudentShell';
++import { Icon, KidLink, LukkiBubble, Pill, SectionTitle, Tile, TileLink } from '@/components/student/Kid';
++import { LearningPath, Tracker } from '@/components/student/Bits';
+ import { useStore } from '@/lib/store';
+-import { gapPath } from '@/lib/data';
+ 
+ export default function StudentHome() {
+-  const { s } = useStore();
++  return (
++    <StudentShell>
++      <HomeBody />
++    </StudentShell>
++  );
++}
++
++function HomeBody() {
++  const { s, ready } = useStore();
++  const inbox = useInbox();
+   const sub = s.submissions['nour-frac'];
+-  const notifs = s.notifs.filter((n) => n.to === 'student');
+-  const waiting = ['submitted', 'checked', 'drafted', 'confirmed'].includes(sub.status);
+   const flag = s.flags.find((f) => f.id === 'f-nour')!;
++  const due = sub.status === 'due';
++  const released = sub.status === 'released';
++  const waiting = !due && !released;
++  const practice = flag.state === 'confirmed';
++  const resultsNew = s.notifs.some((n) => n.id === 'n-res' && !n.read);
++  const notifs = s.notifs.filter((n) => n.to === 'student');
++  const preview = [...notifs.filter((n) => !n.read), ...notifs.filter((n) => n.read)].slice(0, 2);
++  const total = notifs.length + s.announced.length;
++
++  if (!ready) return <div className="h-[60vh]" aria-busy="true" />;
+ 
+   return (
+-    <StudentShell>
+-      <div className="mt-2 mb-5">
+-        {sub.status === 'due' && <LukkiSays mood="wave">Hi Nour! You have <b>1 thing</b> to hand in today.</LukkiSays>}
+-        {waiting && <LukkiSays mood="think">Great job handing it in! Mrs Rasha is checking it now.</LukkiSays>}
+-        {sub.status === 'released' && <LukkiSays mood="cheer">Your Fractions quiz is back. Let’s see what you did well!</LukkiSays>}
+-      </div>
++    <>
++      <section className="pt-1">
++        <p className="text-[13px] font-semibold text-muted">Year 4B · Mrs Rasha’s class</p>
++        <h1 className="font-display text-[34px] leading-[1.05] mb-4">Hi Nour!</h1>
++        {due && <LukkiBubble mood="wave">You have <b>1 thing</b> to hand in. Let’s do it together!</LukkiBubble>}
++        {waiting && <LukkiBubble mood="think">Great job handing it in! Mrs Rasha is checking it now.</LukkiBubble>}
++        {released && <LukkiBubble mood="cheer">Your Fractions quiz is back. Let’s see what you did well!</LukkiBubble>}
++      </section>
+ 
+-      {sub.status === 'due' && (
+-        <Card className="p-5 mb-4 border-2 border-sky">
+-          <Label>Due Sunday</Label>
+-          <div className="font-display text-xl">Maths: Fractions quiz</div>
+-          <p className="text-sm text-muted mt-1">5 questions · take a photo of each page</p>
+-          <LinkBtn href="/student/hand-in/" big className="w-full mt-4">Hand in my work</LinkBtn>
+-        </Card>
+-      )}
+-      {waiting && (
+-        <Card className="p-5 mb-4">
+-          <Label>Handed in</Label>
+-          <div className="font-display text-xl">Fractions quiz</div>
+-          <div className="mt-3 flex items-center gap-2 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-sky animate-pulse" />Waiting for Mrs Rasha to check it</div>
+-          <p className="text-xs text-muted mt-2">You will see your result once your teacher has checked it.</p>
+-        </Card>
+-      )}
+-      {sub.status === 'released' && (
+-        <Link href="/student/results/" className="block mb-4">
+-          <Card className="p-5 border-2 border-sky">
+-            <div className="flex items-center"><Label>Back from your teacher</Label><Chip tone="sky" className="ml-auto">New</Chip></div>
+-            <div className="font-display text-xl">Fractions quiz</div>
+-            <p className="text-sm mt-1">You got lots right! Tap to see Lukki’s tips →</p>
+-          </Card>
+-        </Link>
++      {/* The one thing to do now */}
++      <section aria-label="To do" className="mt-5">
++        {due && (
++          <div className="rise relative overflow-hidden rounded-[28px] bg-navy text-white p-5">
++            <span aria-hidden className="absolute -right-10 -top-12 w-40 h-40 rounded-full bg-sky/15" />
++            <span aria-hidden className="absolute right-6 top-6 text-sun"><Icon name="star" size={18} filled strokeWidth={1.5} /></span>
++            <span aria-hidden className="absolute right-14 top-14 text-sky/70"><Icon name="star" size={12} filled strokeWidth={1.5} /></span>
++            <div className="relative">
++              <Pill tone="sun"><Icon name="clock" size={14} strokeWidth={2.6} />Due Sunday</Pill>
++              <h2 className="font-display text-[26px] leading-tight mt-3">Fractions quiz</h2>
++              <p className="text-[14px] text-white/85 mt-1">Maths · 5 questions · 2 pages</p>
++              <KidLink href="/student/hand-in/" kind="sky" className="w-full mt-5"><Icon name="camera" />Hand in my work</KidLink>
++            </div>
++          </div>
++        )}
++
++        {waiting && (
++          <Tile className="rise p-5">
++            <div className="flex items-center gap-2 mb-4">
++              <h2 className="font-display text-[20px]">Fractions quiz</h2>
++              <Pill tone="sky" className="ml-auto"><Icon name="check" size={14} strokeWidth={3} />Handed in</Pill>
++            </div>
++            <Tracker status={sub.status} />
++          </Tile>
++        )}
++
++        {released && (
++          <Link href="/student/results/" className="press rise relative block overflow-hidden rounded-[28px] bg-sky text-navy p-5 [--edge:var(--color-sky-edge)]">
++            <span aria-hidden className="absolute -right-8 -bottom-10 w-36 h-36 rounded-full bg-white/25" />
++            <span aria-hidden className="absolute right-5 top-5 flex gap-1 text-sun drop-shadow-[0_1px_0_rgba(16,44,65,.35)]">
++              <Icon name="star" size={20} filled strokeWidth={1.5} /><Icon name="star" size={26} filled strokeWidth={1.5} /><Icon name="star" size={20} filled strokeWidth={1.5} />
++            </span>
++            <div className="relative">
++              {resultsNew ? <Pill tone="navy">New</Pill> : <Pill tone="line" className="bg-white/70">Back from Mrs Rasha</Pill>}
++              <h2 className="font-display text-[26px] leading-tight mt-3">Your quiz is back!</h2>
++              <p className="text-[15px] mt-1 font-medium">You got lots right. Lukki has tips for you.</p>
++              <span className="mt-4 inline-flex items-center gap-1.5 font-display text-[16px] tracking-wide">See my feedback <Icon name="right" size={18} strokeWidth={3} /></span>
++            </div>
++          </Link>
++        )}
++      </section>
++
++      {practice && (
++        <TileLink href="/student/practice/" className="mt-4 p-4 flex items-center gap-3.5">
++          <span className="grid place-items-center w-14 h-14 rounded-2xl bg-sun text-navy shrink-0"><Icon name="star" size={28} filled strokeWidth={1.6} /></span>
++          <span className="flex-1">
++            <span className="block text-[12px] font-bold text-muted">Mrs Rasha picked this for you</span>
++            <span className="block font-display text-[18px] leading-tight">Practise comparing fractions</span>
++            <span className="block text-[13px] text-muted mt-0.5">{s.practiceDone > 0 ? 'Done once. Play again any time!' : '3 quick games · no marks'}</span>
++          </span>
++          <Icon name="right" className="text-muted shrink-0" />
++        </TileLink>
+       )}
+ 
+-      {notifs.length > 0 && (
+-        <div className="mb-5">
+-          <Label>From Mrs Rasha</Label>
+-          <div className="space-y-2">
+-            {notifs.slice(0, 3).map((n) => (
+-              <Link key={n.id} href={n.href} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm ${n.read ? 'bg-white border border-rule' : 'bg-tint font-semibold'}`}>
+-                <span className="w-2 h-2 rounded-full bg-azure shrink-0" style={{ opacity: n.read ? 0 : 1 }} />{n.text}
+-              </Link>
++      {total > 0 && (
++        <section aria-labelledby="msgs">
++          <SectionTitle id="msgs" action={
++            <button type="button" onClick={inbox.open} className="min-h-11 px-1 text-[14px] font-bold underline underline-offset-4">See all {total}</button>
++          }>From Mrs Rasha</SectionTitle>
++          <ul className="space-y-2.5">
++            {preview.map((n) => (
++              <li key={n.id}>
++                <Link href={n.href} className={`press flex items-center gap-3 rounded-2xl px-3.5 py-3 border-2 [--edge:var(--color-rule-edge)] ${n.read ? 'bg-white border-rule' : 'bg-tint border-sky'}`}>
++                  <span className={`grid place-items-center w-10 h-10 shrink-0 rounded-xl ${n.read ? 'bg-ice' : 'bg-white'}`}><Icon name={iconFor(n.href)} size={20} /></span>
++                  <span className={`flex-1 text-[15px] leading-snug ${n.read ? '' : 'font-bold'}`}>{n.text}</span>
++                  {!n.read && <Pill tone="navy">New</Pill>}
++                </Link>
++              </li>
+             ))}
+-            {s.announced.map((a) => <div key={a} className="rounded-xl px-3 py-2.5 text-sm bg-white border border-rule">Class note: {a}</div>)}
+-          </div>
+-        </div>
++            {s.announced.slice(-1).map((a) => (
++              <li key={a} className="flex items-center gap-3 rounded-2xl px-3.5 py-3 border-2 border-rule bg-white">
++                <span className="grid place-items-center w-10 h-10 shrink-0 rounded-xl bg-ice"><Icon name="megaphone" size={20} /></span>
++                <span className="flex-1 text-[15px] leading-snug"><span className="block text-[12px] font-bold text-muted">Note to the whole class</span>{a}</span>
++              </li>
++            ))}
++          </ul>
++        </section>
+       )}
+ 
+-      <Label>My Gap Map</Label>
+-      <Card className="p-4">
+-        <div className="flex flex-col items-center gap-2 py-2">
+-          {gapPath.map((g, i) => {
+-            const off = [-50, 30, 70, 10, -40][i];
+-            const gap = g.state === 'gap' && (sub.status !== 'released' || flag.state !== 'dismissed');
+-            return (
+-              <Link key={g.topic} href={gap ? '/student/practice/' : '/student/progress/'} style={{ marginLeft: off }}
+-                className={`w-[86px] h-[86px] rounded-full grid place-items-center text-center text-[11px] font-semibold leading-tight p-2 border-4 ${g.state === 'done' ? 'bg-sky border-azure' : gap ? 'bg-white border-navy ring-4 ring-sky' : 'bg-ice border-rule text-muted'}`}>
+-                <span>{g.state === 'done' ? '✓ ' : gap ? '★ ' : ''}{g.topic}</span>
+-              </Link>
+-            );
+-          })}
+-        </div>
+-        <p className="text-xs text-muted text-center">★ is the topic to practise next. Tap it to play, no marks!</p>
+-      </Card>
+-    </StudentShell>
++      <section aria-labelledby="path">
++        <SectionTitle id="path">My learning path</SectionTitle>
++        <p className="text-[14px] text-muted -mt-1.5 mb-3">The star is what to practise next. Tap it to play. No marks!</p>
++        <Tile className="pt-4 pb-6 px-2 bg-[linear-gradient(180deg,#fff_0%,#F8FBFE_100%)]">
++          <div className="flex items-center gap-2 mx-2 mb-1 rounded-2xl bg-navy text-white px-4 py-3">
++            <span className="grid place-items-center w-9 h-9 rounded-xl bg-white/10 text-sky"><Icon name="target" size={20} /></span>
++            <span><span className="block text-[12px] font-semibold text-sky">Year 4 Maths · Term 1</span><span className="block font-display text-[17px] leading-tight">Numbers and fractions</span></span>
++          </div>
++          <LearningPath gapOpen={!(released && flag.state === 'dismissed')} />
++        </Tile>
++      </section>
++    </>
+   );
+ }
+diff --git a/app/student/practice/page.tsx b/app/student/practice/page.tsx
+index de0a4bf..149b041 100644
+--- a/app/student/practice/page.tsx
++++ b/app/student/practice/page.tsx
+@@ -1,56 +1,129 @@
+ 'use client';
+ import { useState } from 'react';
+-import { StudentShell, LukkiSays } from '@/components/Shells';
+-import { Btn, Card, LinkBtn } from '@/components/ui';
++import { StudentShell } from '@/components/student/StudentShell';
++import { Icon, KidButton, KidLink, Pill, Progress, StarBurst, Tile } from '@/components/student/Kid';
++import Lukki from '@/components/Lukki';
+ import { practiceItems } from '@/lib/data';
+ import { useStore } from '@/lib/store';
+ 
+-function FracBar({ f, picked, onPick }: { f: string; picked?: boolean; onPick: () => void }) {
+-  const [n, dn] = f.split('/').map(Number);
++const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
++const parse = (f: string) => f.split('/').map(Number) as [number, number];
++
++function Bar({ n, dn, label, onTint = false }: { n: number; dn: number; label?: string; onTint?: boolean }) {
++  return (
++    <div className="flex gap-[3px]" role="img" aria-label={label ?? `${n} of ${dn} parts filled`}>
++      {Array.from({ length: dn }).map((_, i) => <div key={i} className={`h-7 flex-1 rounded-[6px] ${i < n ? 'bg-sky' : onTint ? 'bg-white' : 'bg-tint'}`} />)}
++    </div>
++  );
++}
++
++function Option({ f, state, onPick, disabled }: { f: string; state: 'idle' | 'picked' | 'right' | 'wrong'; onPick: () => void; disabled: boolean }) {
++  const [n, dn] = parse(f);
++  const ring = { idle: 'border-rule bg-white [--edge:var(--color-rule-edge)]', picked: 'border-navy bg-tint [--edge:var(--color-navy)]', right: 'border-navy bg-tint [--edge:var(--color-navy)]', wrong: 'border-rule bg-white [--edge:var(--color-rule-edge)]' }[state];
+   return (
+-    <button onClick={onPick} className={`w-full rounded-2xl p-4 bg-white border-2 text-left transition ${picked ? 'border-navy ring-4 ring-sky' : 'border-rule hover:border-sky'}`}>
+-      <div className="font-display text-3xl mb-2">{f}</div>
+-      <div className="flex gap-1" aria-hidden>
+-        {Array.from({ length: dn }).map((_, i) => <div key={i} className={`h-8 flex-1 rounded-md ${i < n ? 'bg-sky' : 'bg-tint'}`} />)}
++    <button type="button" onClick={onPick} disabled={disabled} aria-pressed={state === 'picked' || state === 'right'}
++      className={`press w-full rounded-3xl border-[3px] p-4 text-left disabled:cursor-default ${ring}`}>
++      <div className="flex items-center">
++        <span className="font-display text-[36px] leading-none">{f}</span>
++        {state === 'right' && <Pill tone="sky" className="ml-auto"><Icon name="check" size={13} strokeWidth={3.2} />Bigger</Pill>}
++        {state === 'wrong' && <Pill tone="line" className="ml-auto">Not this one</Pill>}
++        {state === 'picked' && <span className="ml-auto grid place-items-center w-8 h-8 rounded-full bg-navy text-white"><Icon name="check" size={18} strokeWidth={3} /></span>}
+       </div>
++      <div className="mt-3"><Bar n={n} dn={dn} onTint={state === 'picked' || state === 'right'} label={`${f}: ${n} of ${dn} equal parts`} /></div>
+     </button>
+   );
+ }
+ 
+ export default function Practice() {
++  return (
++    <StudentShell>
++      <Game />
++    </StudentShell>
++  );
++}
++
++function Game() {
+   const { d } = useStore();
+   const [i, setI] = useState(0);
+   const [pick, setPick] = useState<'a' | 'b' | null>(null);
++  const [checked, setChecked] = useState(false);
+   const [done, setDone] = useState(false);
+   const item = practiceItems[i];
+   const right = pick === item?.bigger;
+ 
+   if (done) {
+     return (
+-      <StudentShell title="Practice">
+-        <div className="pt-6 space-y-4">
+-          <LukkiSays mood="cheer">You compared 3 fractions! The trick: make the bottom numbers the same, then the bigger top number wins.</LukkiSays>
+-          <Card className="p-4 text-sm text-muted text-center">This was practice: no marks are recorded.</Card>
+-          <LinkBtn href="/student/" kind="soft" className="w-full">Back home</LinkBtn>
++      <div className="space-y-5 pt-2 rise">
++        <div className="relative text-center pt-3">
++          <StarBurst />
++          <Lukki size={128} mood="cheer" className="mx-auto bob" />
++          <h1 className="font-display text-[30px] mt-2">Practice done!</h1>
++          <div className="flex justify-center gap-1.5 mt-2 text-sun" aria-label="3 stars">
++            {[0, 1, 2].map((k) => <Icon key={k} name="star" size={k === 1 ? 40 : 32} filled strokeWidth={1.4} className="drop-shadow-[0_2px_0_#D19A12]" />)}
++          </div>
+         </div>
+-      </StudentShell>
++        <Tile className="p-5">
++          <h2 className="font-display text-[17px]">The trick</h2>
++          <p className="text-[16px] leading-snug mt-1">Make the bottom numbers the same. Then the bigger top number wins.</p>
++        </Tile>
++        <p className="text-[14px] text-muted text-center">This was practice. No marks are recorded.</p>
++        <div className="grid gap-3">
++          <KidButton kind="white" size="md" onClick={() => { setI(0); setPick(null); setChecked(false); setDone(false); }}><Icon name="retry" size={18} />Play again</KidButton>
++          <KidLink href="/student/" className="w-full"><Icon name="home" />Back home</KidLink>
++        </div>
++      </div>
+     );
+   }
+ 
++  const [an, ad] = parse(item.a), [bn, bd] = parse(item.b);
++  const common = (ad * bd) / gcd(ad, bd);
++  // After Check, only the child's own pick changes: the right answer is not given away on a miss.
++  const stateOf = (k: 'a' | 'b') => (pick !== k ? 'idle' : !checked ? 'picked' : right ? 'right' : 'wrong');
++  const next = () => {
++    if (i + 1 < practiceItems.length) { setI(i + 1); setPick(null); setChecked(false); }
++    else { d({ type: 'practice' }); setDone(true); }
++  };
++
+   return (
+-    <StudentShell title="Practice: comparing fractions">
+-      <div className="space-y-4 pt-1">
+-        <div className="flex gap-1.5">{practiceItems.map((_, k) => <div key={k} className={`h-2.5 flex-1 rounded-full ${k <= i ? 'bg-azure' : 'bg-tint'}`} />)}</div>
+-        <LukkiSays mood={pick === null ? 'happy' : right ? 'cheer' : 'think'}>
+-          {pick === null ? 'Which fraction is bigger? Tap it.' : right ? `Yes! ${item.tip}` : `Not yet! Tip: ${item.tip}`}
+-        </LukkiSays>
+-        <FracBar f={item.a} picked={pick === 'a'} onPick={() => setPick('a')} />
+-        <FracBar f={item.b} picked={pick === 'b'} onPick={() => setPick('b')} />
+-        {pick !== null && (right
+-          ? <Btn big className="w-full" onClick={() => { if (i + 1 < practiceItems.length) { setI(i + 1); setPick(null); } else { d({ type: 'practice' }); setDone(true); } }}>{i + 1 < practiceItems.length ? 'Next one' : 'Finish'}</Btn>
+-          : <Btn big kind="sky" className="w-full" onClick={() => setPick(null)}>Try again</Btn>)}
+-        <p className="text-xs text-muted text-center">Practice is never marked.</p>
++    <div className="pt-1">
++      <div className="flex items-center gap-3">
++        <div className="flex-1"><Progress value={i + (checked && right ? 1 : 0)} max={practiceItems.length} label="Practice progress" /></div>
++        <span className="text-[14px] font-bold tabular-nums">{i + 1} of {practiceItems.length}</span>
+       </div>
+-    </StudentShell>
++      <p className="text-[13px] font-semibold text-muted mt-4">Practice · comparing fractions</p>
++      <h1 className="font-display text-[26px] leading-tight">Which fraction is bigger?</h1>
++
++      <div className="grid gap-3 mt-4" role="group" aria-label="Pick the bigger fraction">
++        <Option f={item.a} state={stateOf('a')} disabled={checked} onPick={() => setPick('a')} />
++        <Option f={item.b} state={stateOf('b')} disabled={checked} onPick={() => setPick('b')} />
++      </div>
++
++      {!checked && (
++        <KidButton className="w-full mt-5" disabled={pick === null} onClick={() => setChecked(true)}>Check</KidButton>
++      )}
++
++      {checked && (
++        <div className={`rise mt-5 rounded-[26px] p-4 border-2 ${right ? 'bg-tint border-sky' : 'bg-white border-rule'}`} role="status">
++          <div className="flex items-center gap-2">
++            <Lukki size={52} mood={right ? 'cheer' : 'think'} className="shrink-0" />
++            <h2 className="font-display text-[22px]">{right ? 'Yes! Well done!' : 'Not yet!'}</h2>
++          </div>
++          <p className="text-[15px] leading-snug mt-2 font-medium">{right ? item.tip : `Tip: ${item.tip}`}</p>
++          {/* Same-size pieces: the idea behind the tip, drawn */}
++          <div className={`mt-3 rounded-2xl p-3 space-y-2 ${right ? 'bg-white' : 'bg-ice'}`}>
++            <p className="text-[12px] font-bold">Same-size pieces ({common} parts)</p>
++            <div className="grid grid-cols-[52px_1fr] items-center gap-2">
++              <span className="font-display text-[15px]">{an * (common / ad)}/{common}</span><Bar n={an * (common / ad)} dn={common} />
++              <span className="font-display text-[15px]">{bn * (common / bd)}/{common}</span><Bar n={bn * (common / bd)} dn={common} />
++            </div>
++          </div>
++          {right
++            ? <KidButton className="w-full mt-4" onClick={next}>{i + 1 < practiceItems.length ? 'Next one' : 'Finish'}</KidButton>
++            : <KidButton kind="white" className="w-full mt-4" onClick={() => { setPick(null); setChecked(false); }}><Icon name="retry" />Try again</KidButton>}
++        </div>
++      )}
++
++      <p className="text-[13px] text-muted text-center mt-5">Practice is never marked.</p>
++    </div>
+   );
+ }
+diff --git a/app/student/progress/page.tsx b/app/student/progress/page.tsx
+index 1729b90..ae1f883 100644
+--- a/app/student/progress/page.tsx
++++ b/app/student/progress/page.tsx
+@@ -1,39 +1,106 @@
+ 'use client';
+-import { StudentShell, LukkiSays } from '@/components/Shells';
+-import { Card, Label } from '@/components/ui';
++import { useState } from 'react';
++import { StudentShell } from '@/components/student/StudentShell';
++import { Icon, LukkiBubble, Pill, SectionTitle, Tile } from '@/components/student/Kid';
+ import { useStore, total, maxOf } from '@/lib/store';
+ import { nourHistory } from '@/lib/data';
+ 
+ export default function Progress() {
++  return (
++    <StudentShell title="My progress" kicker="Maths · this year">
++      <Body />
++    </StudentShell>
++  );
++}
++
++function Body() {
+   const { s } = useStore();
+   const sub = s.submissions['nour-frac'];
+-  const rows = [...nourHistory.map((h) => ({ name: h.exam, date: h.date, pct: h.score }))];
+-  if (sub.status === 'released') rows.push({ name: 'Fractions quiz', date: 'Nov', pct: Math.round((total(sub) / maxOf('frac')) * 100) });
++  const released = sub.status === 'released';
++  const rows = nourHistory.map((h) => ({ name: h.exam, date: h.date, pct: h.score }));
++  if (released) rows.push({ name: 'Fractions quiz', date: 'Nov', pct: Math.round((total(sub) / maxOf('frac')) * 100) });
++  const last = rows.length - 1;
++  const [hover, setHover] = useState<number | null>(null);
++  const shown = hover ?? last;
++
++  // Skills: words carry the meaning; the meter only repeats it.
++  const skills = [
++    { name: 'Adding fractions', level: 3, text: 'Always right' },
++    { name: 'Times tables', level: released ? 3 : 2, text: released ? 'Right this time' : 'Getting there' },
++    { name: 'Simplifying fractions', level: released ? 3 : 2, text: released ? 'Right this time' : 'Getting there' },
++    { name: 'Comparing fractions', level: 1, text: 'Your next goal', goal: true },
++  ];
++
+   return (
+-    <StudentShell title="My progress">
+-      <div className="space-y-4 pt-1">
+-        <LukkiSays>Every exam you hand in adds a step to your path.</LukkiSays>
+-        <Card className="p-4">
+-          <Label>My exams this year</Label>
+-          <div className="flex items-end gap-3 h-40 mt-3" role="img" aria-label="Bar chart of exam results">
+-            {rows.map((r) => (
+-              <div key={r.name} className="flex-1 h-full flex flex-col items-center justify-end gap-1">
+-                <span className="text-xs font-semibold">{r.pct}%</span>
+-                <div className="w-full rounded-t-lg bg-sky" style={{ height: `${r.pct * 0.8}%` }} />
+-              </div>
++    <div className="space-y-4">
++      <LukkiBubble still>Every exam you hand in adds a step to your path.</LukkiBubble>
++
++      <Tile as="section" className="p-4 pt-5" aria-labelledby="chart-title">
++        <h2 id="chart-title" className="font-display text-[18px] px-1">My scores</h2>
++        <p className="text-[13px] text-muted px-1" aria-live="polite">
++          <b className="text-navy">{rows[shown].name}</b> · {rows[shown].date} · {rows[shown].pct}%
++        </p>
++        <div className="relative mt-4 h-44 pl-8" onMouseLeave={() => setHover(null)}>
++          {/* recessive grid */}
++          {[100, 50, 0].map((g) => (
++            <div key={g} aria-hidden className="absolute left-0 right-0 flex items-center gap-1.5" style={{ bottom: `${g}%`, transform: 'translateY(50%)' }}>
++              <span className="w-6 text-right text-[11px] font-semibold text-muted tabular-nums">{g}</span>
++              <span className={`flex-1 h-px ${g === 0 ? 'bg-navy/30' : 'bg-rule'}`} />
++            </div>
++          ))}
++          <div className="relative h-full flex items-end gap-[6px] pl-1.5">
++            {rows.map((r, i) => (
++              <button key={r.name} type="button" onMouseEnter={() => setHover(i)} onFocus={() => setHover(i)} onBlur={() => setHover(null)} onClick={() => setHover(i)}
++                aria-label={`${r.name}, ${r.date}: ${r.pct}%`}
++                className="group relative flex-1 h-full flex items-end justify-center rounded-t-md">
++                {i === shown && (
++                  <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-navy text-white text-[12px] font-bold px-2 py-1 tabular-nums" style={{ bottom: `calc(${r.pct}% + 8px)` }}>
++                    {r.pct}%
++                  </span>
++                )}
++                <span className={`block w-full max-w-[40px] rounded-t-[4px] transition-colors ${i === last ? 'bg-azure' : i === shown ? 'bg-[#5BAAE8]' : 'bg-sky'}`} style={{ height: `${r.pct}%` }} />
++              </button>
+             ))}
+           </div>
+-          <div className="flex gap-3 mt-2">{rows.map((r) => <div key={r.name} className="flex-1 text-[10px] text-center text-muted leading-tight">{r.name}<br />{r.date}</div>)}</div>
+-        </Card>
+-        <Card className="p-4 text-sm">
+-          <Label>Getting stronger</Label>
+-          <ul className="space-y-1.5">
+-            <li>✓ Adding fractions: always right</li>
+-            <li>✓ Simplifying fractions: right this time</li>
+-            <li>★ Comparing fractions: your next goal</li>
++        </div>
++        <div className="flex gap-[6px] pl-[38px] mt-2" aria-hidden>
++          {rows.map((r, i) => <span key={r.name} className={`flex-1 text-center text-[12px] ${i === last ? 'font-extrabold' : 'font-semibold text-muted'}`}>{r.date}</span>)}
++        </div>
++
++        {/* the same numbers as a list (the chart's table view) */}
++        <ol className="mt-4 border-t-2 border-ice pt-2">
++          {rows.map((r, i) => (
++            <li key={r.name} className="flex items-center gap-2 py-2 text-[14px] border-b border-ice last:border-0">
++              <span className="w-9 text-[12px] font-semibold text-muted">{r.date}</span>
++              <span className={`flex-1 ${i === last ? 'font-bold' : ''}`}>{r.name}</span>
++              {i === last && released && <Pill tone="sun">New</Pill>}
++              <span className="font-display text-[16px] tabular-nums w-12 text-right">{r.pct}%</span>
++            </li>
++          ))}
++        </ol>
++      </Tile>
++
++      <section aria-labelledby="skills">
++        <SectionTitle id="skills">Getting stronger</SectionTitle>
++        <Tile as="div" className="p-2">
++          <ul>
++            {skills.map((k) => (
++              <li key={k.name} className="flex items-center gap-3 p-3 rounded-2xl">
++                <span className={`grid place-items-center w-11 h-11 shrink-0 rounded-2xl ${k.goal ? 'bg-sun' : 'bg-sky'}`}>
++                  <Icon name={k.goal ? 'star' : 'check'} size={k.goal ? 22 : 20} filled={k.goal} strokeWidth={k.goal ? 1.6 : 3} />
++                </span>
++                <span className="flex-1 min-w-0">
++                  <span className="block text-[15px] font-bold leading-tight">{k.name}</span>
++                  <span className="block text-[13px] text-muted">{k.text}</span>
++                </span>
++                <span className="flex gap-1" role="img" aria-label={`Level ${k.level} of 3`}>
++                  {[1, 2, 3].map((l) => <span key={l} className={`w-3 h-6 rounded-full ${l <= k.level ? 'bg-azure' : 'bg-tint'}`} />)}
++                </span>
++              </li>
++            ))}
+           </ul>
+-        </Card>
+-      </div>
+-    </StudentShell>
++        </Tile>
++      </section>
++    </div>
+   );
+ }
+diff --git a/app/student/results/page.tsx b/app/student/results/page.tsx
+index 09300b6..04de420 100644
+--- a/app/student/results/page.tsx
++++ b/app/student/results/page.tsx
+@@ -1,11 +1,20 @@
+ 'use client';
+ import { useEffect, useState } from 'react';
+-import { StudentShell, LukkiSays } from '@/components/Shells';
+-import { Card, Label, LinkBtn, Chip } from '@/components/ui';
++import { StudentShell } from '@/components/student/StudentShell';
++import { Icon, KidLink, LukkiBubble, Pill, SectionTitle, Tile } from '@/components/student/Kid';
++import { ScoreRing, Tracker } from '@/components/student/Bits';
+ import { useStore, total, maxOf } from '@/lib/store';
+ import { exams } from '@/lib/data';
+ 
+ export default function Results() {
++  return (
++    <StudentShell>
++      <ResultsBody />
++    </StudentShell>
++  );
++}
++
++function ResultsBody() {
+   const { s, d, ready } = useStore();
+   const sub = s.submissions['nour-frac'];
+   const released = sub.status === 'released';
+@@ -14,65 +23,148 @@ export default function Results() {
+   const flag = s.flags.find((f) => f.id === 'f-nour')!;
+   const exam = exams.frac;
+ 
++  if (!ready) return <div className="h-[60vh]" aria-busy="true" />;
++
+   if (!released) {
+     return (
+-      <StudentShell title="My results">
+-        <div className="pt-4 space-y-4">
+-          <LukkiSays mood="think">Your Fractions quiz isn’t back yet. Mrs Rasha checks every answer before you see it.</LukkiSays>
+-          <LinkBtn href="/student/" kind="soft" className="w-full">Back home</LinkBtn>
+-        </div>
+-      </StudentShell>
++      <div className="space-y-4">
++        <h1 className="font-display text-[28px] leading-tight">My results</h1>
++        <LukkiBubble mood="think">Your Fractions quiz isn’t back yet. Mrs Rasha checks every answer before you see it.</LukkiBubble>
++        {sub.status !== 'due' && <Tile className="p-5"><Tracker status={sub.status} /></Tile>}
++        <KidLink href="/student/" kind="white" size="md" className="w-full"><Icon name="home" size={18} />Back home</KidLink>
++      </div>
+     );
+   }
+-  const right = sub.answers.filter((a, i) => a.marks.reduce((x, y) => x + y, 0) === exam.questions[i].steps.reduce((x, y) => x + y.marks, 0)).length;
++
++  const rows = sub.answers.map((a, i) => {
++    const q = exam.questions[i];
++    const got = a.marks.reduce((x, y) => x + y, 0);
++    const max = q.steps.reduce((x, y) => x + y.marks, 0);
++    return { a, q, got, max, full: got === max };
++  });
++  const right = rows.filter((r) => r.full).length;
++  const strong = [...new Set(rows.filter((r) => r.full).map((r) => r.q.concept))];
++  const next = [...new Set(rows.filter((r) => !r.full).map((r) => r.q.concept))];
+ 
+   return (
+-    <StudentShell title="Fractions quiz">
+-      <div className="space-y-4 pt-1">
+-        <LukkiSays mood="cheer">Great effort, Nour! You got <b>{right} of 5</b> questions fully right. Your adding and simplifying are super strong.</LukkiSays>
++    <div className="space-y-4">
++      <div>
++        <p className="text-[13px] font-semibold text-muted">Maths · Year 4B</p>
++        <h1 className="font-display text-[28px] leading-tight">Fractions quiz</h1>
++      </div>
+ 
+-        <Card className="p-5 text-center">
+-          <Label>Your score</Label>
+-          <div className="font-display text-5xl">{total(sub)} <span className="text-muted text-3xl">/ {maxOf('frac')}</span></div>
+-          <div className="text-sm text-muted mt-1">Checked by Mrs Rasha</div>
+-        </Card>
++      {/* Encouragement first, then the score */}
++      <LukkiBubble mood="cheer">Great effort, Nour! You got <b>{right} of {rows.length}</b> questions fully right. Your adding and simplifying are super strong.</LukkiBubble>
+ 
+-        <Label>Question by question</Label>
+-        <div className="space-y-2">
+-          {sub.answers.map((a, i) => {
+-            const q = exam.questions[i];
+-            const got = a.marks.reduce((x, y) => x + y, 0);
+-            const max = q.steps.reduce((x, y) => x + y.marks, 0);
+-            const full = got === max;
++      <Tile className="p-5 rise">
++        <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-3">
++          <h2 className="font-display text-[18px] whitespace-nowrap mr-auto">Your score</h2>
++          <Pill tone="tint"><Icon name="check" size={13} strokeWidth={3.2} />Checked by Mrs Rasha</Pill>
++        </div>
++        <div className="flex items-center gap-5">
++          <ScoreRing got={total(sub)} max={maxOf('frac')} size={124} />
++          <div className="min-w-0">
++            <p className="font-display text-[30px] leading-none">{right} of {rows.length}</p>
++            <p className="text-[15px] text-muted mt-1.5 leading-snug">questions fully right</p>
++          </div>
++        </div>
++        <div className="mt-5 grid gap-3">
++          <div>
++            <h3 className="text-[13px] font-bold mb-1.5">You’re great at</h3>
++            <div className="flex flex-wrap gap-1.5">{strong.map((c) => <Pill key={c} tone="sky"><Icon name="star" size={12} filled strokeWidth={1.5} />{c}</Pill>)}</div>
++          </div>
++          <div>
++            <h3 className="text-[13px] font-bold mb-1.5">Let’s practise</h3>
++            <div className="flex flex-wrap gap-1.5">{next.map((c) => <Pill key={c} tone="line"><Icon name="target" size={12} />{c}</Pill>)}</div>
++          </div>
++        </div>
++      </Tile>
++
++      {sub.comment && (
++        <Tile className="p-4 flex gap-3">
++          <span className="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-navy text-white font-display text-[18px]" aria-hidden>R</span>
++          <div>
++            <h2 className="text-[13px] font-bold text-muted">Mrs Rasha says</h2>
++            <p className="text-[16px] font-medium leading-snug mt-0.5">“{sub.comment}”</p>
++          </div>
++        </Tile>
++      )}
++
++      <section aria-labelledby="qs">
++        <SectionTitle id="qs">Question by question</SectionTitle>
++        <ol className="space-y-3">
++          {rows.map(({ a, q, got, max, full }) => {
++            const isOpen = open === a.qid;
+             return (
+-              <Card key={a.qid} className="p-4">
+-                <div className="flex items-center gap-2">
+-                  <span className="font-semibold">Q{q.n}</span><span className="text-sm text-muted truncate">{q.prompt}</span>
+-                  <Chip tone={full ? 'sky' : 'line'} className="ml-auto shrink-0">{full ? '✓ Got it' : 'Not yet'}</Chip>
+-                </div>
+-                {!full && (
+-                  <>
+-                    <p className="text-sm mt-2">{a.comment}</p>
+-                    <button className="text-sm font-semibold underline mt-1" onClick={() => setOpen(open === a.qid ? null : a.qid)} aria-expanded={open === a.qid}>How to fix it →</button>
+-                    {open === a.qid && <div className="mt-2 rounded-xl bg-tint p-3 text-sm pop">Mark scheme: {q.answer}</div>}
+-                  </>
+-                )}
+-              </Card>
++              <li key={a.qid}>
++                <Tile as="article" className={`p-4 ${full ? '' : 'border-sky'}`} aria-labelledby={`q-${a.qid}`}>
++                  <div className="flex items-start gap-3">
++                    <span className={`grid place-items-center w-9 h-9 shrink-0 rounded-xl font-display text-[16px] ${full ? 'bg-sky' : 'bg-tint'}`} aria-hidden>{q.n}</span>
++                    <div className="flex-1 min-w-0">
++                      <h3 id={`q-${a.qid}`} className="text-[15px] font-semibold leading-snug"><span className="sr-only">Question {q.n}: </span>{q.prompt}</h3>
++                      <div className="mt-2 flex items-center gap-2">
++                        {full
++                          ? <Pill tone="sky"><Icon name="check" size={13} strokeWidth={3.2} />Got it</Pill>
++                          : <Pill tone="line"><Icon name="circle" size={13} strokeWidth={2.6} />Not yet</Pill>}
++                        <span className="text-[12px] font-semibold text-muted">{got} of {max} {max === 1 ? 'mark' : 'marks'}</span>
++                      </div>
++                    </div>
++                  </div>
++                  <p className={`mt-3 text-[15px] leading-snug ${full ? 'text-muted' : ''}`}>{a.comment}</p>
++                  {!full && (
++                    <>
++                      <button type="button" onClick={() => setOpen(isOpen ? null : a.qid)} aria-expanded={isOpen} aria-controls={`fix-${a.qid}`}
++                        className="mt-2 inline-flex items-center gap-1.5 min-h-11 font-display text-[15px] tracking-wide underline underline-offset-4">
++                        How to fix it <Icon name="down" size={18} strokeWidth={3} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
++                      </button>
++                      {isOpen && (
++                        <div id={`fix-${a.qid}`} className="rise mt-1 rounded-2xl bg-ice p-4 space-y-3">
++                          <div>
++                            <h4 className="text-[12px] font-bold text-muted">You wrote</h4>
++                            <p className="font-hand text-[22px] leading-tight text-[#1d3d8f]">{a.written.join('  ·  ')}</p>
++                          </div>
++                          <div>
++                            <h4 className="text-[12px] font-bold text-muted mb-1.5">Step by step</h4>
++                            <ul className="space-y-1.5">
++                              {q.steps.map((st, k) => {
++                                const ok = a.marks[k] >= st.marks;
++                                return (
++                                  <li key={k} className="flex items-start gap-2.5 text-[14px] leading-snug">
++                                    <span className={`grid place-items-center w-6 h-6 shrink-0 rounded-full mt-px ${ok ? 'bg-sky' : 'bg-white ring-2 ring-navy/25'}`}>
++                                      {ok && <Icon name="check" size={14} strokeWidth={3.2} />}
++                                    </span>
++                                    <span><b>{ok ? 'You did this: ' : 'Not yet: '}</b>{st.label.replace(/^(Method|Answer): /, '')}</span>
++                                  </li>
++                                );
++                              })}
++                            </ul>
++                          </div>
++                          <div className="rounded-xl bg-white border-2 border-rule px-3 py-2.5">
++                            <h4 className="text-[12px] font-bold text-muted">The right way</h4>
++                            <p className="text-[15px] font-semibold">{q.answer}</p>
++                          </div>
++                        </div>
++                      )}
++                    </>
++                  )}
++                </Tile>
++              </li>
+             );
+           })}
+-        </div>
++        </ol>
++      </section>
+ 
+-        {sub.comment && (
+-          <Card className="p-4"><Label>Mrs Rasha says</Label><p className="text-sm">{sub.comment}</p></Card>
+-        )}
+-        {flag.state === 'confirmed' && (
+-          <Card className="p-4 bg-tint border-sky">
+-            <Label>Practice for you</Label>
+-            <p className="text-sm">{flag.note}</p>
+-            <LinkBtn href="/student/practice/" big className="w-full mt-3">Practise comparing fractions (no marks)</LinkBtn>
+-          </Card>
+-        )}
+-      </div>
+-    </StudentShell>
++      {flag.state === 'confirmed' && (
++        <div className="relative overflow-hidden rounded-[28px] bg-navy text-white p-5">
++          <span aria-hidden className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-sky/15" />
++          <div className="relative">
++            <Pill tone="sun"><Icon name="star" size={13} filled strokeWidth={1.5} />Practice for you</Pill>
++            <p className="text-[16px] leading-snug mt-3">{flag.note}</p>
++            <KidLink href="/student/practice/" kind="sky" className="w-full mt-4"><Icon name="star" />Practise comparing fractions</KidLink>
++            <p className="text-[13px] text-white/85 text-center mt-2">No marks. Just for you.</p>
++          </div>
++        </div>
++      )}
++    </div>
+   );
+ }
+diff --git a/components/Shells.tsx b/components/Shells.tsx
+index 0108396..0d9da76 100644
+--- a/components/Shells.tsx
++++ b/components/Shells.tsx
+@@ -11,55 +11,13 @@ const Icon = ({ d }: { d: string }) => (
+ );
+ const I = {
+   home: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
+-  upload: 'M12 16V4m0 0l-4 4m4-4l4 4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3',
+-  star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',
+-  chart: 'M4 20V10m6 10V4m6 16v-7m4 7H2',
+   check: 'M4 12l5 5L20 6',
+   text: 'M4 6h16M4 12h10M4 18h7',
+   users: 'M16 19v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6m13 9v-1a4 4 0 0 0-3-3.9M16 4.1a3 3 0 0 1 0 5.8',
+   send: 'M22 2L11 13M22 2l-7 20-4-9-9-4z',
+   list: 'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01',
+-  bell: 'M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0',
+ };
+ 
+-/* ---------------- Student: phone-first, playful ---------------- */
+-export function StudentShell({ children, title }: { children: ReactNode; title?: string }) {
+-  const path = usePathname();
+-  const { s } = useStore();
+-  const unread = s.notifs.filter((n) => n.to === 'student' && !n.read).length;
+-  const tabs = [
+-    { href: '/student/', label: 'Home', icon: I.home },
+-    { href: '/student/hand-in/', label: 'Hand in', icon: I.upload },
+-    { href: '/student/practice/', label: 'Practice', icon: I.star },
+-    { href: '/student/progress/', label: 'Progress', icon: I.chart },
+-  ];
+-  return (
+-    <div className="min-h-screen flex justify-center bg-ice md:py-6">
+-      <div className="w-full max-w-[420px] bg-cream md:rounded-[36px] md:border-[3px] md:border-navy/80 md:shadow-xl flex flex-col min-h-screen md:min-h-[840px] md:max-h-[880px] overflow-hidden relative">
+-        <header className="flex items-center justify-between px-5 pt-5 pb-2">
+-          <Link href="/" aria-label="Back to start"><Wordmark size="text-xl" /></Link>
+-          <Link href="/student/" className="relative p-2 rounded-full bg-white border border-rule" aria-label={`${unread} new notifications`}>
+-            <Icon d={I.bell} />
+-            {unread > 0 && <span className="absolute -top-1 -right-1 bg-azure text-white text-[10px] font-bold rounded-full w-5 h-5 grid place-items-center">{unread}</span>}
+-          </Link>
+-        </header>
+-        {title && <h1 className="px-5 pt-1 pb-1 font-display text-2xl">{title}</h1>}
+-        <main className="flex-1 overflow-y-auto px-5 pb-28">{children}</main>
+-        <nav className="absolute bottom-0 inset-x-0 bg-white border-t border-rule grid grid-cols-4 px-2 pb-3 pt-2" aria-label="Student">
+-          {tabs.map((t) => {
+-            const on = path === t.href || (t.href !== '/student/' && path.startsWith(t.href));
+-            return (
+-              <Link key={t.href} href={t.href} className={`flex flex-col items-center gap-0.5 py-1.5 rounded-xl text-[11px] font-semibold ${on ? 'text-navy bg-tint' : 'text-muted'}`}>
+-                <Icon d={t.icon} />{t.label}
+-              </Link>
+-            );
+-          })}
+-        </nav>
+-      </div>
+-    </div>
+-  );
+-}
+-
+ /* ---------------- Teacher: calm desktop, side menu + class tabs ---------------- */
+ export function TeacherShell({ children, title, actions }: { children: ReactNode; title: string; actions?: ReactNode }) {
+   const path = usePathname();
+diff --git a/components/student/Bits.tsx b/components/student/Bits.tsx
+new file mode 100644
+index 0000000..ae8d841
+--- /dev/null
++++ b/components/student/Bits.tsx
+@@ -0,0 +1,108 @@
++'use client';
++import Link from 'next/link';
++import { gapPath } from '@/lib/data';
++import type { Status } from '@/lib/store';
++import { Icon } from './Kid';
++
++/* ---------------- Where is my work? (visibility of system status) ---------------- */
++export function Tracker({ status }: { status: Status }) {
++  const back = status === 'released';
++  const steps = [
++    { t: 'Handed in', d: 'Fractions quiz · 2 pages', state: 'done' as const },
++    { t: back ? 'Checked by Mrs Rasha' : 'Mrs Rasha is checking it', d: back ? 'She checked every answer' : 'She reads every answer first', state: back ? 'done' as const : 'now' as const },
++    { t: 'Back to you', d: back ? 'Lukki has tips for you' : 'You will get a message', state: back ? 'done' as const : 'later' as const },
++  ];
++  return (
++    <ol className="relative" aria-label="Where your quiz is">
++      {steps.map((x, i) => (
++        <li key={x.t} className="relative flex gap-3 pb-4 last:pb-0" aria-current={x.state === 'now' ? 'step' : undefined}>
++          {i < steps.length - 1 && <span aria-hidden className={`absolute left-[15px] top-8 bottom-0 w-[3px] rounded-full ${x.state === 'done' ? 'bg-sky' : 'bg-rule'}`} />}
++          <span className={`relative z-10 grid place-items-center w-[33px] h-[33px] shrink-0 rounded-full ${x.state === 'done' ? 'bg-sky text-navy' : x.state === 'now' ? 'bg-white ring-[3px] ring-navy' : 'bg-white ring-2 ring-rule'}`}>
++            {x.state === 'done' && <Icon name="check" size={18} strokeWidth={3} />}
++            {x.state === 'now' && <span className="pulse-dot w-3 h-3 rounded-full bg-navy" />}
++          </span>
++          <span className="pt-1">
++            <span className={`block text-[15px] leading-tight ${x.state === 'later' ? 'font-semibold text-muted' : 'font-bold'}`}>
++              {x.t}{x.state === 'done' && <span className="sr-only"> (done)</span>}{x.state === 'now' && <span className="sr-only"> (now)</span>}
++            </span>
++            <span className="block text-[13px] text-muted mt-0.5">{x.d}</span>
++          </span>
++        </li>
++      ))}
++    </ol>
++  );
++}
++
++/* ---------------- Gap Map as a learning path ---------------- */
++const W = 280, STEP = 118, TOP = 70, R = 36;
++const OFF = [-60, 30, 70, 30, -60];
++
++export function LearningPath({ gapOpen }: { gapOpen: boolean }) {
++  const nodes = gapPath.map((g, i) => {
++    const kind = g.state === 'done' ? 'done' : g.state === 'gap' && gapOpen ? 'gap' : 'later';
++    return { ...g, kind, x: W / 2 + OFF[i % OFF.length], y: TOP + i * STEP };
++  });
++  const H = TOP + (nodes.length - 1) * STEP + R + 24;
++  const seg = (a: (typeof nodes)[number], b: (typeof nodes)[number]) => `M${a.x} ${a.y} C${a.x} ${a.y + STEP / 2}, ${b.x} ${b.y - STEP / 2}, ${b.x} ${b.y}`;
++
++  return (
++    <div className="relative mx-auto" style={{ width: W, height: H }}>
++      <svg aria-hidden width={W} height={H} className="absolute inset-0">
++        {nodes.slice(1).map((b, i) => {
++          const a = nodes[i];
++          const solid = a.kind === 'done' && b.kind !== 'later';
++          return <path key={i} d={seg(a, b)} fill="none" strokeLinecap="round" stroke={solid ? '#6EB9F2' : '#C3D3E2'} strokeWidth={solid ? 8 : 6} strokeDasharray={solid ? undefined : '0.1 14'} />;
++        })}
++      </svg>
++      <ol className="absolute inset-0" aria-label="My learning path">
++        {nodes.map((n) => {
++          const labelLeft = n.x > W / 2;
++          const sub = n.kind === 'done' ? 'Done' : n.kind === 'gap' ? 'Practise next' : 'Coming later';
++          const circle = (
++            <span className={`press grid place-items-center rounded-full ${n.kind === 'done' ? 'bg-sky text-navy [--edge:var(--color-sky-edge)]' : n.kind === 'gap' ? 'bg-sun text-navy [--edge:#D19A12] ring-[7px] ring-tint' : 'bg-[#E6EEF6] text-muted [--edge:#D3DFEA]'}`}
++              style={{ width: R * 2, height: R * 2 }}>
++              <Icon name={n.kind === 'done' ? 'check' : n.kind === 'gap' ? 'star' : 'lock'} size={n.kind === 'later' ? 24 : 30} strokeWidth={n.kind === 'done' ? 3.2 : 2.4} filled={n.kind === 'gap'} />
++            </span>
++          );
++          const label = (
++            <span className={`absolute top-1/2 -translate-y-1/2 w-[128px] ${labelLeft ? 'right-[calc(100%+12px)] text-right' : 'left-[calc(100%+12px)]'}`}>
++              <span className={`block text-[15px] leading-tight ${n.kind === 'later' ? 'font-semibold text-muted' : 'font-extrabold'}`}>{n.topic}</span>
++              {n.kind === 'gap'
++                ? <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-navy text-white text-[12px] font-bold px-2.5 py-1">Practise next</span>
++                : <span className="block text-[12px] font-semibold text-muted mt-0.5">{sub}</span>}
++            </span>
++          );
++          const pos = { left: n.x - R, top: n.y - R, width: R * 2, height: R * 2 };
++          return (
++            <li key={n.topic} className="absolute" style={pos}>
++              {n.kind === 'later'
++                ? <span className="relative block" aria-label={`${n.topic}: coming later`}>{circle}{label}</span>
++                : <Link href={n.kind === 'gap' ? '/student/practice/' : '/student/progress/'} className="relative block rounded-full" aria-label={`${n.topic}: ${sub}`}>{circle}{label}</Link>}
++            </li>
++          );
++        })}
++      </ol>
++    </div>
++  );
++}
++
++/* ---------------- Score ring ---------------- */
++export function ScoreRing({ got, max, size = 132 }: { got: number; max: number; size?: number }) {
++  const sw = 14, r = (size - sw) / 2, c = 2 * Math.PI * r;
++  const off = c * (1 - got / max);
++  return (
++    <div className="relative shrink-0" style={{ width: size, height: size }}>
++      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90" aria-hidden>
++        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#E3F0FB" strokeWidth={sw} />
++        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#4790CD" strokeWidth={sw} strokeLinecap="round"
++          strokeDasharray={c} strokeDashoffset={off} className="ring-draw" style={{ ['--full' as string]: c }} />
++      </svg>
++      <div className="absolute inset-0 grid place-items-center text-center">
++        <div>
++          <div className="font-display text-[40px] leading-none tabular-nums">{got}</div>
++          <div className="text-[13px] font-bold text-muted mt-1">out of {max}</div>
++        </div>
++      </div>
++    </div>
++  );
++}
+diff --git a/components/student/Kid.tsx b/components/student/Kid.tsx
+new file mode 100644
+index 0000000..315773a
+--- /dev/null
++++ b/components/student/Kid.tsx
+@@ -0,0 +1,132 @@
++// Building blocks for the student portal ("Duolingo for the kid").
++// One button family, one tile family, one chip family. Colour rules from Phase 1:
++// navy carries text; sky and azure only fill behind navy text or decorate; sun is
++// for stars and celebration only; no red anywhere.
++import Link from 'next/link';
++import type { ButtonHTMLAttributes, ReactNode } from 'react';
++import Lukki from '../Lukki';
++
++/* ---------------- Icons (24px, 2px stroke, round) ---------------- */
++const P: Record<string, string> = {
++  home: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
++  camera: 'M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8',
++  star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',
++  chart: 'M4 20V11m6 9V5m6 15v-6m4 6H2',
++  bell: 'M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0',
++  check: 'M5 12.5l4.5 4.5L19 7.5',
++  x: 'M6 6l12 12M18 6L6 18',
++  right: 'M9 5l7 7-7 7',
++  down: 'M5 9l7 7 7-7',
++  left: 'M15 5l-7 7 7 7',
++  lock: 'M6 11h12v10H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3',
++  image: 'M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4M15.5 9.5h.01',
++  paper: 'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h4',
++  send: 'M22 2L11 13M22 2l-7 20-4-9-9-4z',
++  clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2',
++  target: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 12h.01',
++  retry: 'M4 4v6h6M20 20v-6h-6M5.6 15a7 7 0 0 0 12.3 2.4M18.4 9A7 7 0 0 0 6.1 6.6',
++  megaphone: 'M3 10v4h3l7 5V5L6 10zM17 9a4 4 0 0 1 0 6',
++  eye: 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6',
++  pencil: 'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',
++  circle: 'M12 19a7 7 0 1 0 0-14 7 7 0 0 0 0 14',
++};
++export type IconName = keyof typeof P;
++export function Icon({ name, size = 22, filled = false, className = '', strokeWidth = 2.2 }: { name: IconName; size?: number; filled?: boolean; className?: string; strokeWidth?: number }) {
++  return (
++    <svg viewBox="0 0 24 24" width={size} height={size} className={className} aria-hidden fill={filled ? 'currentColor' : 'none'}
++      stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"><path d={P[name]} /></svg>
++  );
++}
++
++/* ---------------- Buttons ---------------- */
++type Kind = 'navy' | 'sky' | 'white' | 'sun';
++const KIND: Record<Kind, string> = {
++  navy: 'bg-navy text-white [--edge:var(--color-edge)]',
++  sky: 'bg-sky text-navy [--edge:var(--color-sky-edge)]',
++  white: 'bg-white text-navy border-2 border-rule [--edge:var(--color-rule-edge)]',
++  sun: 'bg-sun text-navy [--edge:#D19A12]',
++};
++const SIZE = {
++  lg: 'min-h-14 px-6 text-[17px] rounded-2xl gap-2.5',
++  md: 'min-h-12 px-5 text-[15px] rounded-2xl gap-2',
++};
++const base = 'press inline-flex items-center justify-center font-display tracking-wide select-none disabled:bg-[#E6EEF6] disabled:text-muted disabled:[--edge:#D3DFEA] disabled:cursor-not-allowed';
++
++type BtnProps = ButtonHTMLAttributes<HTMLButtonElement> & { kind?: Kind; size?: keyof typeof SIZE };
++export function KidButton({ kind = 'navy', size = 'lg', className = '', ...p }: BtnProps) {
++  return <button {...p} className={`${base} ${KIND[kind]} ${SIZE[size]} ${className}`} />;
++}
++export function KidLink({ href, kind = 'navy', size = 'lg', className = '', children, ...rest }: { href: string; kind?: Kind; size?: keyof typeof SIZE; className?: string; children: ReactNode; 'aria-label'?: string }) {
++  return <Link href={href} {...rest} className={`${base} ${KIND[kind]} ${SIZE[size]} ${className}`}>{children}</Link>;
++}
++
++/* ---------------- Tiles ---------------- */
++// Static tiles are flat; tiles you can tap get the pressable edge (a signifier).
++export function Tile({ children, className = '', as: As = 'div', ...rest }: { children: ReactNode; className?: string; as?: 'div' | 'section' | 'article' | 'li'; 'aria-labelledby'?: string }) {
++  return <As {...rest} className={`bg-white rounded-3xl border-2 border-rule ${className}`}>{children}</As>;
++}
++export function TileLink({ href, children, className = '', ...rest }: { href: string; children: ReactNode; className?: string; 'aria-label'?: string }) {
++  return <Link href={href} {...rest} className={`press block bg-white rounded-3xl border-2 border-rule [--edge:var(--color-rule-edge)] ${className}`}>{children}</Link>;
++}
++
++/* ---------------- Chips and labels ---------------- */
++type ChipTone = 'sky' | 'line' | 'sun' | 'navy' | 'tint';
++const CHIP: Record<ChipTone, string> = {
++  sky: 'bg-sky text-navy',
++  line: 'bg-white text-navy ring-2 ring-inset ring-navy/20',
++  sun: 'bg-sun text-navy',
++  navy: 'bg-navy text-white',
++  tint: 'bg-tint text-navy',
++};
++export function Pill({ children, tone = 'tint', className = '' }: { children: ReactNode; tone?: ChipTone; className?: string }) {
++  return <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[12px] font-bold leading-none whitespace-nowrap ${CHIP[tone]} ${className}`}>{children}</span>;
++}
++export function SectionTitle({ children, id, action }: { children: ReactNode; id?: string; action?: ReactNode }) {
++  return (
++    <div className="flex items-end gap-2 mb-2.5 mt-7">
++      <h2 id={id} className="font-display text-[19px] leading-tight">{children}</h2>
++      {action && <div className="ml-auto">{action}</div>}
++    </div>
++  );
++}
++
++/* ---------------- Progress ---------------- */
++export function Progress({ value, max, label }: { value: number; max: number; label: string }) {
++  const pct = Math.max(0, Math.min(100, (value / max) * 100));
++  return (
++    <div className="h-4 rounded-full bg-tint overflow-hidden" role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={max} aria-label={label}>
++      <div className="relative h-full rounded-full bg-azure transition-[width] duration-500" style={{ width: `${pct}%`, minWidth: pct > 0 ? 16 : 0 }}>
++        <div className="absolute left-2 right-2 top-[3px] h-[4px] rounded-full bg-white/35" />
++      </div>
++    </div>
++  );
++}
++
++/* ---------------- Lukki speaks ---------------- */
++type Mood = 'happy' | 'cheer' | 'think' | 'wave';
++export function LukkiBubble({ children, mood = 'happy', size = 72, still = false }: { children: ReactNode; mood?: Mood; size?: number; still?: boolean }) {
++  return (
++    <div className="flex items-end gap-2.5 rise">
++      <Lukki size={size} mood={mood} className={`shrink-0 ${still ? '' : 'bob'}`} />
++      <div className="relative flex-1 bg-white border-2 border-rule rounded-[22px] px-4 py-3 text-[16px] leading-snug font-medium mb-2">
++        {/* tail */}
++        <span aria-hidden className="absolute -left-[9px] bottom-4 w-4 h-4 bg-white border-l-2 border-b-2 border-rule rotate-45 rounded-bl-[4px]" />
++        <span className="relative">{children}</span>
++      </div>
++    </div>
++  );
++}
++
++/* ---------------- Celebration stars (decorative) ---------------- */
++export function StarBurst() {
++  const pts = [[-110, -60], [-70, -110], [0, -130], [70, -110], [110, -60], [-120, 10], [120, 10], [-60, 50], [60, 50]];
++  return (
++    <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2">
++      {pts.map(([x, y], i) => (
++        <span key={i} className="burst absolute text-sun" style={{ ['--x' as string]: `${x}px`, ['--y' as string]: `${y}px`, animationDelay: `${i * 40}ms` }}>
++          <Icon name="star" size={i % 3 === 0 ? 22 : 16} filled strokeWidth={1.5} />
++        </span>
++      ))}
++    </div>
++  );
++}
+diff --git a/components/student/StudentShell.tsx b/components/student/StudentShell.tsx
+new file mode 100644
+index 0000000..e053ecc
+--- /dev/null
++++ b/components/student/StudentShell.tsx
+@@ -0,0 +1,146 @@
++'use client';
++// Student shell: phone-first, playful. The page scrolls inside the frame, so the
++// tab bar is always in reach. The bell opens Nour's messages from Mrs Rasha.
++import Link from 'next/link';
++import { usePathname } from 'next/navigation';
++import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
++import { useStore } from '@/lib/store';
++import { Wordmark } from '../ui';
++import { Icon, Pill, type IconName } from './Kid';
++
++const InboxCtx = createContext<{ open: () => void }>({ open: () => {} });
++export const useInbox = () => useContext(InboxCtx);
++
++export function iconFor(href: string): IconName {
++  if (href.includes('results')) return 'star';
++  if (href.includes('practice')) return 'target';
++  return 'paper';
++}
++
++const tabs: { href: string; label: string; icon: IconName }[] = [
++  { href: '/student/', label: 'Home', icon: 'home' },
++  { href: '/student/hand-in/', label: 'Hand in', icon: 'camera' },
++  { href: '/student/practice/', label: 'Practice', icon: 'star' },
++  { href: '/student/progress/', label: 'Progress', icon: 'chart' },
++];
++
++export function StudentShell({ children, title, kicker }: { children: ReactNode; title?: string; kicker?: string }) {
++  const path = usePathname();
++  const { s } = useStore();
++  const [inbox, setInbox] = useState(false);
++  const bell = useRef<HTMLButtonElement>(null);
++  const unread = s.notifs.filter((n) => n.to === 'student' && !n.read).length;
++  const flag = s.flags.find((f) => f.id === 'f-nour');
++  const practiceNew = flag?.state === 'confirmed' && s.practiceDone === 0;
++  const open = useCallback(() => setInbox(true), []);
++  const close = useCallback(() => { setInbox(false); bell.current?.focus(); }, []);
++
++  return (
++    <InboxCtx.Provider value={{ open }}>
++      <div className="kid min-h-dvh flex justify-center md:items-center md:py-8 bg-ice relative">
++        {/* the soft sky glow from our report covers, behind the phone on wide screens */}
++        <div aria-hidden className="hidden md:block fixed -top-48 -right-40 w-[720px] h-[720px] rounded-full bg-[radial-gradient(circle,#A9D5F8_0%,rgba(169,213,248,0)_66%)]" />
++        <div aria-hidden className="hidden md:block fixed -bottom-64 -left-48 w-[640px] h-[640px] rounded-full bg-[radial-gradient(circle,#D7EAFB_0%,rgba(215,234,251,0)_66%)]" />
++
++        <div className="relative w-full max-w-[430px] h-dvh md:h-[min(880px,calc(100dvh-4rem))] bg-cream md:rounded-[44px] md:border-[3px] md:border-navy md:shadow-[0_40px_80px_-32px_rgba(16,44,65,.45)] flex flex-col overflow-hidden">
++          <header className="flex items-center gap-3 px-5 pt-4 pb-2 bg-cream z-10">
++            <Link href="/" aria-label="iLoveTests start page" className="rounded-lg"><Wordmark size="text-[22px]" /></Link>
++            <span className="ml-auto text-[13px] font-semibold text-muted hidden min-[360px]:inline">Nour · 4B</span>
++            <button ref={bell} type="button" onClick={open} aria-haspopup="dialog"
++              aria-label={unread ? `Messages, ${unread} new` : 'Messages'}
++              className="press relative grid place-items-center w-11 h-11 rounded-2xl bg-white border-2 border-rule [--edge:var(--color-rule-edge)]">
++              <Icon name="bell" size={20} />
++              {unread > 0 && <span aria-hidden className="absolute -top-1.5 -right-1.5 min-w-[22px] h-[22px] px-1 rounded-full bg-navy text-white text-[12px] font-bold grid place-items-center ring-2 ring-cream">{unread}</span>}
++            </button>
++          </header>
++
++          <main className="flex-1 overflow-y-auto overscroll-contain px-5 pb-36" id="main">
++            {(title || kicker) && (
++              <div className="pt-1 pb-3">
++                {kicker && <p className="text-[13px] font-semibold text-muted">{kicker}</p>}
++                {title && <h1 className="font-display text-[28px] leading-[1.1]">{title}</h1>}
++              </div>
++            )}
++            {children}
++          </main>
++
++          <nav aria-label="Student" className="absolute inset-x-0 bottom-0 z-20 bg-white border-t-2 border-rule px-2 pt-1.5 pb-[max(10px,env(safe-area-inset-bottom))] grid grid-cols-4">
++            {tabs.map((t) => {
++              const on = t.href === '/student/' ? path === t.href || path === '/student' : path.startsWith(t.href.slice(0, -1));
++              const dot = t.href === '/student/practice/' && practiceNew && !on;
++              return (
++                <Link key={t.href} href={t.href} aria-current={on ? 'page' : undefined}
++                  className="flex flex-col items-center gap-0.5 py-1 rounded-2xl min-h-[56px]">
++                  <span className={`relative grid place-items-center w-14 h-9 rounded-2xl transition-colors ${on ? 'bg-sky text-navy' : 'text-muted'}`}>
++                    <Icon name={t.icon} size={22} strokeWidth={on ? 2.5 : 2} />
++                    {dot && <span className="absolute top-0.5 right-2.5 w-2.5 h-2.5 rounded-full bg-sun ring-2 ring-white"><span className="sr-only">new practice</span></span>}
++                  </span>
++                  <span className={`text-[12px] ${on ? 'font-extrabold text-navy' : 'font-semibold text-muted'}`}>{t.label}</span>
++                </Link>
++              );
++            })}
++          </nav>
++
++          {inbox && <Inbox onClose={close} />}
++        </div>
++      </div>
++    </InboxCtx.Provider>
++  );
++}
++
++function Inbox({ onClose }: { onClose: () => void }) {
++  const { s } = useStore();
++  const closeBtn = useRef<HTMLButtonElement>(null);
++  const notifs = s.notifs.filter((n) => n.to === 'student');
++  const box = useRef<HTMLDivElement>(null);
++  useEffect(() => {
++    closeBtn.current?.focus();
++    const k = (e: KeyboardEvent) => {
++      if (e.key === 'Escape') onClose();
++      if (e.key === 'Tab' && box.current) { // keep focus inside the sheet
++        const f = Array.from(box.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
++        if (!f.length) return;
++        const first = f[0], last = f[f.length - 1];
++        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
++        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
++      }
++    };
++    window.addEventListener('keydown', k);
++    return () => window.removeEventListener('keydown', k);
++  }, [onClose]);
++
++  return (
++    <div className="absolute inset-0 z-40 flex flex-col justify-end">
++      <button type="button" aria-label="Close messages" tabIndex={-1} onClick={onClose} className="fade absolute inset-0 bg-navy/45 cursor-default" />
++      <div ref={box} role="dialog" aria-modal="true" aria-labelledby="inbox-title" className="sheet relative bg-cream rounded-t-[32px] max-h-[78%] flex flex-col shadow-[0_-12px_40px_rgba(16,44,65,.25)]">
++        <div aria-hidden className="mx-auto mt-2.5 w-12 h-1.5 rounded-full bg-rule" />
++        <div className="flex items-center px-5 pt-3 pb-2">
++          <h2 id="inbox-title" className="font-display text-[22px]">Messages</h2>
++          <button ref={closeBtn} type="button" onClick={onClose} aria-label="Close messages" className="ml-auto grid place-items-center w-11 h-11 rounded-2xl hover:bg-tint">
++            <Icon name="x" />
++          </button>
++        </div>
++        <ul className="overflow-y-auto px-5 pb-8 space-y-2.5">
++          {notifs.map((n) => (
++            <li key={n.id}>
++              <Link href={n.href} onClick={onClose}
++                className={`press flex items-center gap-3 rounded-2xl px-3.5 py-3 border-2 [--edge:var(--color-rule-edge)] ${n.read ? 'bg-white border-rule' : 'bg-tint border-sky'}`}>
++                <span className={`grid place-items-center w-11 h-11 shrink-0 rounded-xl ${n.read ? 'bg-ice' : 'bg-white'}`}><Icon name={iconFor(n.href)} /></span>
++                <span className={`flex-1 text-[15px] leading-snug ${n.read ? '' : 'font-bold'}`}>{n.text}</span>
++                {!n.read && <Pill tone="navy">New</Pill>}
++                <Icon name="right" size={18} className="shrink-0 text-muted" />
++              </Link>
++            </li>
++          ))}
++          {s.announced.map((a) => (
++            <li key={a} className="flex items-center gap-3 rounded-2xl px-3.5 py-3 border-2 border-rule bg-white">
++              <span className="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-ice"><Icon name="megaphone" /></span>
++              <span className="flex-1 text-[15px] leading-snug"><span className="block text-[12px] font-bold text-muted">Note to the whole class</span>{a}</span>
++            </li>
++          ))}
++          {notifs.length === 0 && s.announced.length === 0 && <li className="text-center text-muted py-6">No messages yet.</li>}
++        </ul>
++      </div>
++    </div>
++  );
++}
+diff --git a/package-lock.json b/package-lock.json
+index 37bf97e..a6b5950 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -9,6 +9,7 @@
+       "version": "1.0.0",
+       "dependencies": {
+         "@fontsource/inter": "^5.3.0",
++        "@fontsource/nunito": "^5.3.0",
+         "@fontsource/patrick-hand": "^5.3.0",
+         "next": "^16.4.6",
+         "react": "^19.3.1",
+@@ -55,6 +56,15 @@
+         "url": "https://github.com/sponsors/ayuhito"
+       }
+     },
++    "node_modules/@fontsource/nunito": {
++      "version": "5.3.0",
++      "resolved": "https://registry.npmjs.org/@fontsource/nunito/-/nunito-5.3.0.tgz",
++      "integrity": "sha512-vw9TaTQJ/zpEpKrsODuPmOvaVjXgdda6B+xXA4YqjrdeJ62MLgVoDerdRXFQHyBnSCt2yQ2nHKCHPP/Pv7Xq4Q==",
++      "license": "OFL-1.1",
++      "funding": {
++        "url": "https://github.com/sponsors/ayuhito"
++      }
++    },
+     "node_modules/@fontsource/patrick-hand": {
+       "version": "5.3.0",
+       "resolved": "https://registry.npmjs.org/@fontsource/patrick-hand/-/patrick-hand-5.3.0.tgz",
+diff --git a/package.json b/package.json
+index d7a5c13..4cfad48 100644
+--- a/package.json
++++ b/package.json
+@@ -11,6 +11,7 @@
+   },
+   "dependencies": {
+     "@fontsource/inter": "^5.3.0",
++    "@fontsource/nunito": "^5.3.0",
+     "@fontsource/patrick-hand": "^5.3.0",
+     "next": "^16.4.6",
+     "react": "^19.3.1",
+-- 
+2.43.0
+

@@ -1,0 +1,28 @@
+{
+  "name": "ilovetests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "iLoveTests – AI-assisted exam assessment and learning-gap detection for Grades 1–5 (CSEN 909 HCI prototype, GUC Winter 2026)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "npx serve out",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/nunito": "^5.3.0",
+    "@fontsource/patrick-hand": "^5.3.0",
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^5.9.3"
+  }
+}
